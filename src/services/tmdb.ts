@@ -1,21 +1,19 @@
+import axios from 'axios'
 import type { Movie, TVShow, TMDBResponse, SearchResult } from '../types/types'
 
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY
-const BASE_URL = 'https://api.themoviedb.org/3'
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p'
 
+const tmdbClient = axios.create({
+    baseURL: 'https://api.themoviedb.org/3',
+    params: {
+        api_key: import.meta.env.VITE_TMDB_API_KEY,
+        language: 'tr-TR',
+    },
+})
+
 async function tmdbFetch<T>(endpoint: string, params: Record<string, string | number> = {}): Promise<T> {
-    const url = new URL(`${BASE_URL}${endpoint}`)
-    url.searchParams.set('api_key', API_KEY)
-    url.searchParams.set('language', 'tr-TR')
-
-    for (const [key, value] of Object.entries(params)) {
-        url.searchParams.set(key, String(value))
-    }
-
-    const res = await fetch(url.toString())
-    if (!res.ok) throw new Error(`TMDB API error: ${res.status} ${res.statusText}`)
-    return res.json() as Promise<T>
+    const response = await tmdbClient.get<T>(endpoint, { params })
+    return response.data
 }
 
 export const getImageUrl = (

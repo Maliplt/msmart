@@ -17,13 +17,13 @@ export default function Header() {
         <Brand />
         <Nav activeKey={location.pathname}>
           <Nav.Item as={Link} to="/" eventKey="/">
-            Home
+            Anasayfa
           </Nav.Item>
           <Nav.Item as={Link} to="/movies" eventKey="/movies">
-            Movies
+            Seç İzle
           </Nav.Item>
           <Nav.Item as={Link} to="/tv" eventKey="/tv">
-            TV Shows
+            TV İzle
           </Nav.Item>
         </Nav>
       </Navbar.Content>
