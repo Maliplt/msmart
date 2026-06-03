@@ -3,11 +3,14 @@ import { Carousel, Button } from 'rsuite'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { getImageUrl } from '../services/tmdb'
+import { useSwipe } from '../hooks/useSwipe'
 import type { Movie } from '../types/types'
 
 interface HeroCarouselProps {
   movies: Movie[]
 }
+
+const OVERVIEW_MAX = 180
 
 export default function HeroCarousel({ movies }: HeroCarouselProps) {
   const navigate = useNavigate()
@@ -21,10 +24,12 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
     setActiveIndex((prev) => (prev === movies.length - 1 ? 0 : prev + 1))
   }
 
+  const swipe = useSwipe(handleNext, handlePrev)
+
   if (movies.length === 0) return null
 
   return (
-    <div className="hero-carousel-wrapper">
+    <div className="hero-carousel-wrapper" {...swipe}>
       <Carousel
         placement="bottom"
         shape="dot"
@@ -45,7 +50,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
               <h1>{movie.title}</h1>
               <p className="hero-meta">{movie.release_date?.slice(0, 4)}</p>
               <p className="hero-overview">
-                {movie.overview?.slice(0, 180)}{(movie.overview?.length ?? 0) > 180 ? '…' : ''}
+                {movie.overview?.slice(0, OVERVIEW_MAX)}{(movie.overview?.length ?? 0) > OVERVIEW_MAX ? '…' : ''}
               </p>
               <Button className="btn-play" size="lg" onClick={() => navigate('/work-in-progress')}>
                 <span className="play-icon">▶</span> Oynat

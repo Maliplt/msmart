@@ -486,15 +486,15 @@ function floodReveal(board: Cell[][], r: number, c: number, rows: number, cols: 
 function useTimer() {
     const [time, setTime] = useState<number>(0);
     const [running, setRunning] = useState<boolean>(false);
-    const ref = useRef<any>(null);
+    const ref = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
         if (running) {
             ref.current = setInterval(() => setTime(t => t + 1), 1000);
-        } else {
+        } else if (ref.current) {
             clearInterval(ref.current);
         }
-        return () => clearInterval(ref.current);
+        return () => { if (ref.current) clearInterval(ref.current); };
     }, [running]);
 
     return {

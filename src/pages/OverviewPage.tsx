@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Button } from 'rsuite'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import PageLayout from '../components/PageLayout'
 import ContentCarousel from '../components/ContentCarousel'
 import Spinner from '../components/Spinner'
 import { tmdbApi, getImageUrl } from '../services/tmdb'
@@ -51,10 +50,7 @@ export default function OverviewPage() {
     }, [type, id, selectedSeason, loading, detail])
 
     if (loading || !detail) return (
-        <div className="overview-loading-screen">
-            <Header />
-            <Spinner />
-        </div>
+        <PageLayout className="overview-page" mainClassName="overview-main" loading />
     )
 
     const isMovie = type === 'movie'
@@ -79,9 +75,7 @@ export default function OverviewPage() {
         new Date(dateStr).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })
 
     return (
-        <div className="overview-page">
-            <Header />
-            <main className="overview-main">
+        <PageLayout className="overview-page" mainClassName="overview-main">
                 <div className="overview-hero">
                     <img
                         src={getImageUrl(detail.backdrop_path, 'original')}
@@ -163,8 +157,6 @@ export default function OverviewPage() {
                 <div className="overview-similar">
                     <ContentCarousel type={type!} title="Benzer İçerikler" items={similar} />
                 </div>
-            </main>
-            <Footer />
-        </div>
+        </PageLayout>
     )
 }

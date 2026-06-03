@@ -142,6 +142,17 @@
     transition: $props $dur var(--ease);
 }
 
+// Breakpoint tokens — single source of truth for all responsive rules.
+// Usage: @include bp($bp-md) { ... }
+$bp-xl: 1200px; // minor desktop tweaks
+$bp-lg: 1024px; // tablet
+$bp-md:  768px; // small tablet / landscape mobile
+$bp-sm:  480px; // portrait mobile
+
+@mixin bp($max) {
+    @media (max-width: $max) { @content; }
+}
+
 
 // 3. Reset & Base =============================================================
 
@@ -944,6 +955,9 @@ main {
 // 7.3 HeroCarousel ------------------------------------------------------------
 .hero-carousel-inner {
     height: 80vh !important;
+    // dvh = dynamic viewport height (excludes mobile browser chrome).
+    // Supported in Chrome 108+, Safari 15.4+, Firefox 101+ — vh is the fallback.
+    height: 80dvh !important;
 }
 
 .hero-carousel-wrapper {
@@ -1184,9 +1198,19 @@ main {
         display: none;
     }
 
+    // On touch devices the nav arrows are hidden entirely:
+    //  • Swipe handlers on .cc-carousel-wrapper already cover navigation.
+    //  • Visible arrows intercept touch events, breaking swipe.
+    //  • They also visually overlap the item overlay text.
     .cc-carousel-wrapper .cc-nav-arrow {
-        opacity: 1;
-        width: 44px;
+        display: none;
+    }
+
+    // Same reasoning for the hero carousel — RSuite Carousel handles
+    // touch-swipe natively; dot indicators remain as visual guides.
+    // Must match specificity of base .hero-carousel-wrapper .hero-nav-btn rule.
+    .hero-carousel-wrapper .hero-nav-btn {
+        display: none !important;
     }
 
     .gc-card .gc-card__overlay {
@@ -2034,6 +2058,17 @@ a>.rs-panel {
         height: 65vh !important;
     }
 
+    .hero-carousel-inner {
+        height: 65dvh !important;
+    }
+
+    .hero-nav-btn {
+        width: 48px !important;
+        height: 48px !important;
+
+        svg { width: 28px; height: 28px; }
+    }
+
     .cc-carousel-wrapper .rs-carousel {
         height: 36vw !important;
     }
@@ -2091,11 +2126,14 @@ a>.rs-panel {
     // --- Hero ---
     .hero-carousel-inner {
         height: 52vh !important;
+        height: 52dvh !important;
     }
 
     .hero-nav-btn {
         width: 40px !important;
         height: 40px !important;
+
+        svg { width: 22px; height: 22px; }
 
         &.prev { left: 12px; }
         &.next { right: 12px; }
@@ -2240,11 +2278,40 @@ a>.rs-panel {
         padding: 10px 28px !important;
     }
 
+    // --- ContentCarousel item overlay ---
+    .cc-item__name {
+        font-size: 15px !important;
+    }
+
+    .cc-item__action-btn {
+        width: 28px;
+        height: 28px;
+    }
+
+    .cc-item__overview-container {
+        height: 36px;
+    }
+
+    // cc-nav-arrow width for non-touch mobile (e.g. foldable with stylus)
+    // Touch devices get display:none via @media (hover: none) above.
+    .cc-carousel-wrapper .cc-nav-arrow {
+        width: 40px;
+    }
+
     // --- Search overlay ---
+    // Base .centered-search uses left:50% + translate(-50%,-50%).
+    // On mobile we anchor to the right edge (where the search icon lives)
+    // and kill the transform so the animejs width expansion is right-anchored
+    // and doesn't bleed off-screen. Do NOT set width with !important —
+    // animejs drives width via inline style which !important would block.
     .animated-search-container.centered-search {
         position: fixed !important;
         top: 8px !important;
+        right: 8px !important;
+        left: auto !important;
+        transform: none !important;
         max-width: calc(100vw - 16px) !important;
+        height: 44px !important;
     }
 }
 
@@ -2268,6 +2335,7 @@ a>.rs-panel {
     // --- Hero ---
     .hero-carousel-inner {
         height: 48vh !important;
+        height: 48dvh !important;
     }
 
     .hero-nav-btn {
@@ -2285,6 +2353,18 @@ a>.rs-panel {
 
     .hero-overview {
         display: none !important;
+    }
+
+    // Hero nav arrows: hidden on very small screens.
+    // Specificity must match the base .hero-carousel-wrapper .hero-nav-btn rule
+    // which uses display:flex !important — so we need the same compound selector + !important.
+    .hero-carousel-wrapper .hero-nav-btn {
+        display: none !important;
+    }
+
+    // Content carousel nav arrows: hidden on very small screens.
+    .cc-carousel-wrapper .cc-nav-arrow {
+        display: none;
     }
 
     // --- ContentCarousel ---
@@ -2336,6 +2416,31 @@ a>.rs-panel {
         padding: 9px 22px !important;
     }
 
+    // --- ContentCarousel item overlay ---
+    .cc-item__name {
+        font-size: 12px !important;
+        letter-spacing: 0;
+    }
+
+    .cc-item__meta {
+        font-size: 11px !important;
+        gap: 4px;
+    }
+
+    .cc-item__action-btn {
+        width: 24px;
+        height: 24px;
+    }
+
+    // Overview too small to read on 480px, hide to reduce visual noise
+    .cc-item__overview-container {
+        display: none;
+    }
+
+    .cc-carousel-wrapper .cc-nav-arrow {
+        width: 32px;
+    }
+
     .paket-btn {
         font-size: 13px !important;
         padding: 7px 14px !important;
@@ -2365,6 +2470,52 @@ a>.rs-panel {
         top: 56px;
         height: calc(100% - 56px);
         padding-top: var(--space-6);
+    }
+}
+
+// ---- LoginPage responsive ---------------------------------------------------
+@media (max-width: 900px) {
+    .login-left  { width: 45%; }
+    .login-right { width: 55%; padding: calc(72px + var(--space-4)) var(--space-5) var(--space-5); }
+}
+
+@media (max-width: $bp-md) {
+    .login-left  { display: none; }
+
+    .login-right {
+        width: 100%;
+        padding: calc(60px + var(--space-6)) var(--space-5) var(--space-6);
+        justify-content: flex-start;
+        background: rgba(7, 7, 11, 0.78);
+        border-left: none;
+    }
+
+    .login-card { max-width: 100%; }
+}
+
+// ---- PackagesPage responsive ------------------------------------------------
+@media (max-width: $bp-lg) {
+    .packages-main {
+        padding: calc(72px + var(--space-8)) var(--space-6) var(--space-10);
+    }
+
+    .packages-grid {
+        gap: var(--space-4);
+    }
+}
+
+@media (max-width: $bp-md) {
+    .packages-main {
+        padding: calc(60px + var(--space-6)) var(--space-4) var(--space-8);
+    }
+
+    .packages-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+    }
+
+    .packages-hero h1 {
+        font-size: var(--fs-3xl);
     }
 }
 
@@ -2663,5 +2814,661 @@ a>.rs-panel {
     letter-spacing: 0.2px;
     margin-top: var(--space-1);
     display: inline-block;
+}
+
+
+.login-page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--bg-0);
+}
+
+.login-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+    user-select: none;
+    pointer-events: none;
+
+    &.active { opacity: 1; z-index: 1; }
+}
+
+.login-bg-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background: rgba(7, 7, 11, 0.36);
+    pointer-events: none;
+}
+
+.login-panels {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 60px); // 60px ≈ footer height
+}
+
+.login-left {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-12) var(--space-10);
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            linear-gradient(to right, rgba(7, 7, 11, 0.15) 0%, transparent 55%),
+            linear-gradient(to top,
+                rgba(7, 7, 11, 0.90) 0%,
+                rgba(7, 7, 11, 0.35) 38%,
+                transparent 65%);
+    }
+}
+
+.login-left__info {
+    position: relative;
+    color: #fff;
+    max-width: 520px;
+}
+
+.login-left__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: var(--radius-pill);
+    margin-bottom: var(--space-3);
+}
+
+.login-left__info h2 {
+    font-size: clamp(24px, 2.8vw, 40px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: var(--space-3);
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.65);
+    color: #fff;
+}
+
+.login-left__info p {
+    font-size: var(--fs-sm);
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.65;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.login-right {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: calc(72px + var(--space-6)) var(--space-8) var(--space-8);
+    overflow-y: auto;
+    background: rgba(7, 7, 11, 0.38);
+    backdrop-filter: blur(32px) saturate(1.4);
+    -webkit-backdrop-filter: blur(32px) saturate(1.4);
+    border-left: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-heading {
+    font-size: var(--fs-3xl);
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.login-subheading {
+    font-size: var(--fs-sm);
+    color: var(--text-secondary);
+    margin: 0 0 var(--space-6);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.login-label {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.login-page {
+    .rs-input {
+        background-color: rgba(255, 255, 255, 0.96) !important;
+        color: #111111 !important;
+        border-color: rgba(255, 255, 255, 0.8) !important;
+        padding: 14px 16px !important;
+        font-size: var(--fs-md) !important;
+        height: auto !important;
+        border-radius: var(--radius-1) !important;
+
+        &::placeholder {
+            color: rgba(0, 0, 0, 0.35) !important;
+        }
+
+        &:hover {
+            border-color: rgba(255, 255, 255, 1) !important;
+            background-color: #ffffff !important;
+        }
+
+        &:focus {
+            border-color: var(--accent) !important;
+            background-color: #ffffff !important;
+            box-shadow: 0 0 0 1px var(--accent-soft) !important;
+        }
+    }
+}
+
+.login-input-error {
+    border-color: var(--danger) !important;
+    background-color: rgba(255, 230, 230, 0.96) !important;
+
+    &:focus {
+        border-color: var(--danger) !important;
+        box-shadow: 0 0 0 1px rgba(255, 77, 79, 0.28) !important;
+    }
+}
+
+.login-field-err {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+    font-size: var(--fs-xs);
+    color: #ff9090;
+    font-weight: 500;
+}
+
+.login-input-wrap {
+    position: relative;
+
+    .rs-input { padding-right: 44px !important; }
+
+    .login-pw-toggle {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+        display: flex;
+        padding: 4px;
+        z-index: 1;
+        @include smooth(color);
+
+        &:hover { color: rgba(0, 0, 0, 0.65); }
+    }
+}
+
+.login-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+}
+
+.login-submit-btn {
+    height: 50px !important;
+    font-size: var(--fs-md) !important;
+    font-weight: 700 !important;
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: var(--radius-1) !important;
+    letter-spacing: 0.02em !important;
+    @include smooth(background-color box-shadow transform, var(--dur-fast));
+
+    &:hover {
+        background-color: var(--accent-hover) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 6px 20px rgba(255, 106, 0, 0.35) !important;
+    }
+
+    &:active { transform: translateY(0) !important; }
+}
+
+.login-register-btn {
+    height: 50px !important;
+    font-size: var(--fs-md) !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    background: transparent !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: var(--radius-1) !important;
+    letter-spacing: 0.01em !important;
+    @include smooth(background-color border-color color, var(--dur-fast));
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border-color: rgba(255, 255, 255, 0.45) !important;
+        color: #ffffff !important;
+    }
+}
+
+.login-page > .rs-footer {
+    position: relative;
+    z-index: 3;
+    background: rgba(7, 7, 11, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+
+// 8.8 PackagesPage -------------------------------------------------------------
+
+.packages-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.packages-main {
+    flex: 1;
+    padding: calc(72px + var(--space-12)) var(--space-10) var(--space-16);
+}
+
+.packages-hero {
+    text-align: center;
+    margin-bottom: var(--space-12);
+
+    .packages-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--accent-soft);
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        font-size: var(--fs-xs);
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 5px 16px;
+        border-radius: var(--radius-pill);
+        margin-bottom: var(--space-4);
+    }
+
+    h1 {
+        font-size: clamp(28px, 4vw, var(--fs-4xl));
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: var(--space-3);
+    }
+
+    p {
+        font-size: var(--fs-md);
+        color: var(--text-secondary);
+        max-width: 520px;
+        margin: 0 auto;
+    }
+}
+
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+.package-card {
+    background: var(--bg-1);
+    border: 1.5px solid var(--border-default);
+    border-radius: var(--radius-1);
+    padding: var(--space-8) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    position: relative;
+    @include smooth(transform border-color box-shadow);
+
+    &:hover {
+        transform: translateY(-6px);
+        border-color: var(--border-strong);
+        box-shadow: var(--shadow-lg);
+    }
+
+    &.package-card--accent {
+        border-color: var(--accent);
+        background: linear-gradient(145deg, var(--bg-1) 0%, rgba(255, 106, 0, 0.07) 100%);
+
+        &:hover {
+            box-shadow: 0 16px 48px rgba(255, 106, 0, 0.2);
+        }
+    }
+
+    .package-badge {
+        position: absolute;
+        top: -14px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: #ffffff;
+        font-size: var(--fs-xs);
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 4px 18px;
+        border-radius: var(--radius-pill);
+        white-space: nowrap;
+    }
+
+    .package-card__header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+
+        .pkg-icon-accent  { color: var(--accent); }
+        .pkg-icon-default { color: var(--text-secondary); }
+    }
+
+    .package-name {
+        font-size: var(--fs-lg);
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .package-price-row {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+    }
+
+    .package-price {
+        font-size: var(--fs-hero);
+        font-weight: 800;
+        color: var(--text-primary);
+    }
+
+    .package-period {
+        font-size: var(--fs-sm);
+        color: var(--text-tertiary);
+    }
+
+    .package-features {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        flex: 1;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--fs-sm);
+            color: var(--text-secondary);
+
+            svg { color: var(--accent); flex-shrink: 0; }
+        }
+    }
+
+    .package-cta {
+        margin-top: var(--space-4);
+        height: 46px !important;
+        font-size: var(--fs-md) !important;
+        font-weight: 700 !important;
+        border-radius: var(--radius-1) !important;
+
+        &.pkg-cta-accent {
+            background-color: var(--accent) !important;
+            border-color: var(--accent) !important;
+            color: #ffffff !important;
+
+            &:hover {
+                background-color: var(--accent-hover) !important;
+                border-color: var(--accent-hover) !important;
+            }
+        }
+    }
+}
+
+@include bp($bp-md) {
+    .packages-grid {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+    }
+}
+
+
+// 8.6 SearchPage --------------------------------------------------------------
+.search-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.search-main {
+    flex: 1;
+    padding: calc(72px + var(--space-8)) 60px var(--space-12);
+
+    @include bp($bp-md) {
+        padding: calc(72px + var(--space-6)) var(--space-5) var(--space-10);
+    }
+}
+
+.search-results-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+
+    h2 {
+        font-size: var(--fs-2xl);
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-primary);
+    }
+
+    .search-results-query {
+        color: var(--accent);
+    }
+
+    .search-results-count {
+        font-size: var(--fs-sm);
+        color: var(--text-tertiary);
+        white-space: nowrap;
+    }
+
+    @include bp($bp-sm) {
+        h2 { font-size: var(--fs-xl); }
+    }
+}
+
+.search-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--space-6) var(--space-4);
+
+    @include bp($bp-md) {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: var(--space-5) var(--space-3);
+    }
+
+    @include bp($bp-sm) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+// 7.8 MediaCard ---------------------------------------------------------------
+.media-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    text-decoration: none;
+    @include smooth(transform);
+
+    &:hover {
+        transform: translateY(-4px);
+        text-decoration: none;
+
+        .media-card__poster { border-color: var(--border-strong); box-shadow: var(--shadow-lg); }
+        .media-card__name { color: var(--accent); }
+    }
+
+    &__poster {
+        position: relative;
+        aspect-ratio: 2 / 3;
+        border-radius: var(--radius-1);
+        overflow: hidden;
+        border: 1px solid var(--border-subtle);
+        background: var(--bg-2);
+        @include smooth(border-color box-shadow);
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    }
+
+    &__rating {
+        position: absolute;
+        top: var(--space-2);
+        left: var(--space-2);
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        padding: 2px 7px;
+        border-radius: var(--radius-pill);
+        background: var(--overlay-strong);
+        backdrop-filter: blur(4px);
+        font-size: var(--fs-xs);
+        font-weight: 700;
+        color: var(--text-primary);
+
+        svg { color: var(--warning); }
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    &__name {
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        @include truncate;
+        @include smooth(color);
+    }
+
+    &__year {
+        font-size: var(--fs-xs);
+        color: var(--text-tertiary);
+    }
+}
+
+
+// 7.9 StateView (empty / error / no-results) ----------------------------------
+.state-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-3);
+    min-height: 50vh;
+    padding: var(--space-12) var(--space-4);
+
+    &__icon {
+        color: var(--text-muted);
+        margin-bottom: var(--space-2);
+    }
+
+    &__title {
+        font-size: var(--fs-xl);
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    &__desc {
+        font-size: var(--fs-base);
+        color: var(--text-tertiary);
+        max-width: 420px;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    &__action {
+        margin-top: var(--space-4);
+    }
+}
+
+
+// 7.10 ErrorBoundary fallback -------------------------------------------------
+.app-error-boundary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-4);
+    min-height: 100vh;
+    padding: var(--space-8) var(--space-4);
+
+    h1 {
+        font-size: var(--fs-3xl);
+        font-weight: 800;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    p {
+        font-size: var(--fs-md);
+        color: var(--text-tertiary);
+        margin: 0;
+        max-width: 420px;
+    }
 }
 

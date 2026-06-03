@@ -1,11 +1,14 @@
-import { useRef, useState, useMemo, useEffect } from 'react'
+import { memo, useRef, useState, useMemo, useEffect } from 'react'
 import { Carousel } from 'rsuite'
 import { Link } from 'react-router-dom'
 import { animate } from 'animejs'
 import { ChevronLeft, ChevronRight, Play, Plus, ThumbsUp, ChevronDown } from 'lucide-react'
 import { getImageUrl } from '../services/tmdb'
 import { useVisibleCount } from '../hooks/useVisibleCount'
+import { useSwipe } from '../hooks/useSwipe'
 import type { Movie, TVShow } from '../types/types'
+
+const HOVER_EXPAND_DELAY = 500
 
 interface ContentCarouselProps {
   type: 'movie' | 'tv'
@@ -13,7 +16,7 @@ interface ContentCarouselProps {
   items: Movie[] | TVShow[]
 }
 
-function ItemCard({ item, type }: { item: Movie | TVShow; type: 'movie' | 'tv' }) {
+const ItemCard = memo(function ItemCard({ item, type }: { item: Movie | TVShow; type: 'movie' | 'tv' }) {
   const ref = useRef<HTMLDivElement>(null)
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const expanded = useRef(false)
@@ -38,7 +41,7 @@ function ItemCard({ item, type }: { item: Movie | TVShow; type: 'movie' | 'tv' }
 
   const onEnter = () => {
     if (window.matchMedia('(hover: none)').matches) return
-    timer.current = setTimeout(doExpand, 500)
+    timer.current = setTimeout(doExpand, HOVER_EXPAND_DELAY)
   }
   const onLeave = () => {
     if (timer.current) { clearTimeout(timer.current); timer.current = null }
@@ -93,12 +96,11 @@ function ItemCard({ item, type }: { item: Movie | TVShow; type: 'movie' | 'tv' }
       </div>
     </div>
   )
-}
+})
 
 export default function ContentCarousel({ type, title, items }: ContentCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const visible = useVisibleCount()
-  const touchStartX = useRef<number | null>(null)
 
   const slides = useMemo(() => {
     const result: Array<(Movie | TVShow)[]> = []
@@ -122,6 +124,8 @@ export default function ContentCarousel({ type, title, items }: ContentCarouselP
     setActiveIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1))
   }
 
+  const swipe = useSwipe(handleNext, handlePrev)
+
   if (slides.length === 0) return null
 
   return (
@@ -143,16 +147,7 @@ export default function ContentCarousel({ type, title, items }: ContentCarouselP
         )}
       </div>
 
-      <div
-        className="cc-carousel-wrapper"
-        onTouchStart={(e) => { touchStartX.current = e.touches[0]?.clientX ?? null }}
-        onTouchEnd={(e) => {
-          if (touchStartX.current === null) return
-          const dx = (e.changedTouches[0]?.clientX ?? 0) - touchStartX.current
-          touchStartX.current = null
-          if (Math.abs(dx) > 50) dx < 0 ? handleNext() : handlePrev()
-        }}
-      >
+      <div className="cc-carousel-wrapper" {...swipe}>
         {slides.length > 1 && activeIndex > 0 && (
           <button className="cc-nav-arrow prev" onClick={handlePrev} aria-label="Önceki slayt">
             <ChevronLeft size={30} />

@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react'
+
 export interface Movie {
     id: number
     title: string
@@ -102,4 +104,18 @@ export interface TVSeasonDetail {
     air_date: string | null
     poster_path: string | null
     episodes: Episode[]
+}
+
+//packages
+export interface PackageDef {
+    id: string
+    name: string
+    price: string
+    period: string
+    Icon: LucideIcon
+    badge: string | null
+    accent: boolean
+    features: string[]
+    cta: string
+    free: boolean
 }

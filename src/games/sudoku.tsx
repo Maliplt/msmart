@@ -417,7 +417,45 @@ body { background: #f5ede0; }
   position: relative; top: 0;
 }
 
-.win-btn:active { box-sizing: border-box; box-shadow: 0 0px 0 #3a2010; top: 3px; }
+.win-btn:active { box-shadow: 0 0px 0 #3a2010; top: 3px; }
+
+.win-level-badge {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #9a7050;
+  background: rgba(200,160,90,0.12);
+  border: 1px solid rgba(200,160,90,0.3);
+  padding: 4px 16px;
+  border-radius: 3px;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.win-btn-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.win-btn-next {
+  background: #6b3d1e;
+  color: #f9ede0;
+  border-color: #4a2a10;
+  box-shadow: 0 3px 0 #3a2010;
+  min-width: 160px;
+}
+
+.win-btn-ghost {
+  background: transparent;
+  color: #8b6040;
+  border: 1.5px solid #c0956a;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.1);
+  min-width: 90px;
+}
 
 @media (max-width: 540px) {
   .sudoku-app { padding: 12px 8px 32px; }
@@ -427,7 +465,6 @@ body { background: #f5ede0; }
     height: calc((100vw - 36px) / 9);
     font-size: clamp(11px, calc((100vw - 36px) / 9 * 0.38), 20px);
   }
-  .pencil-mark { font-size: 7px; }
   .num-btn {
     width: calc((100vw - 40px) / 9 - 4px);
     height: calc((100vw - 40px) / 9 - 2px);
@@ -575,6 +612,7 @@ export default function SudokuApp() {
     const [selected, setSelected] = useState<{ r: number; c: number } | null>(null);
     const [mistakes, setMistakes] = useState<number>(0);
     const [won, setWon] = useState<boolean>(false);
+    const [level, setLevel] = useState<number>(1);
     const { time, fmt, start, stop, reset } = useTimer();
 
     const startGame = useCallback((diff: string) => {
@@ -610,20 +648,38 @@ export default function SudokuApp() {
             newBoard[r][c].value = 0;
             newBoard[r][c].error = false;
         } else {
+            const tempNums = newBoard.map(row => row.map(cell => cell.value));
+            tempNums[r][c] = 0;
+            const valid = isValid(tempNums, r, c, num);
             newBoard[r][c].value = num;
-            const correct = game.solution[r][c] === num;
-            newBoard[r][c].error = !correct;
-            if (!correct) {
+            newBoard[r][c].error = !valid;
+            if (!valid) {
                 setMistakes(m => m + 1);
             }
         }
 
         setBoard(newBoard);
+        setSelected(null);
 
-        const solved = newBoard.every((row, ri) =>
-            row.every((cell, ci) => cell.value === game.solution[ri][ci])
-        );
-        if (solved) {
+        const nums = newBoard.map(row => row.map(cell => cell.value));
+        const boardComplete = (): boolean => {
+            if (nums.some(row => row.some(v => v === 0))) return false;
+            for (let i = 0; i < 9; i++) {
+                if (new Set(nums[i]).size !== 9) return false;
+                if (new Set(nums.map(r2 => r2[i])).size !== 9) return false;
+            }
+            for (let br = 0; br < 3; br++) {
+                for (let bc = 0; bc < 3; bc++) {
+                    const box: number[] = [];
+                    for (let i = 0; i < 3; i++)
+                        for (let j = 0; j < 3; j++)
+                            box.push(nums[br * 3 + i][bc * 3 + j]);
+                    if (new Set(box).size !== 9) return false;
+                }
+            }
+            return true;
+        };
+        if (boardComplete()) {
             setWon(true);
             stop();
             const best = localStorage.getItem('sudoku_best_time');
@@ -748,6 +804,10 @@ export default function SudokuApp() {
 
                     <div className="status-bar">
                         <div className="status-item">
+                            <div className="status-label">Bölüm</div>
+                            <div className="status-value" style={{ fontSize: 18 }}>{level}</div>
+                        </div>
+                        <div className="status-item">
                             <div className="status-label">Süre</div>
                             <div className="status-value">{fmt(time)}</div>
                         </div>
@@ -776,8 +836,9 @@ export default function SudokuApp() {
                 </div>
 
                 {won && (
-                    <div className="win-overlay" onClick={() => setWon(false)}>
-                        <div className="win-card" onClick={e => e.stopPropagation()}>
+                    <div className="win-overlay">
+                        <div className="win-card">
+                            <div className="win-level-badge">Bölüm {level}</div>
                             <div className="win-title">Tebrikler!</div>
                             <div className="ornament" style={{ justifyContent: 'center', marginBottom: 8 }}>
                                 <div className="ornament-line" />
@@ -801,9 +862,14 @@ export default function SudokuApp() {
                                     </div>
                                 </div>
                             </div>
-                            <button className="win-btn" onClick={() => startGame(difficulty)}>
-                                Yeni Oyun
-                            </button>
+                            <div className="win-btn-row">
+                                <button className="win-btn win-btn-next" onClick={() => { setLevel(l => l + 1); startGame(difficulty); }}>
+                                    Sonraki Bölüm →
+                                </button>
+                                <button className="win-btn win-btn-ghost" onClick={() => { startGame(difficulty); }}>
+                                    Tekrar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}

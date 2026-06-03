@@ -1,77 +1,62 @@
-import { useEffect, useState } from 'react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import { useMemo } from 'react'
+import PageLayout from '../components/PageLayout'
 import HeroCarousel from '../components/HeroCarousel'
 import ContentCarousel from '../components/ContentCarousel'
-import Spinner from '../components/Spinner'
 import { tmdbApi } from '../services/tmdb'
+import { useAsyncData } from '../hooks/useAsyncData'
 import type { Movie } from '../types/types'
 
-interface ExploreData {
-    hero: Movie[]
-    oscar: Movie[]
-    kids: Movie[]
-    action: Movie[]
-    thriller: Movie[]
-    horror: Movie[]
-}
+// TMDB genre ids — https://developer.themoviedb.org/reference/genre-movie-list
+const GENRE = {
+    kidsAndFamily: '16,10751',
+    action: 28,
+    thriller: 53,
+    horror: 27,
+} as const
 
-const EMPTY: ExploreData = { hero: [], oscar: [], kids: [], action: [], thriller: [], horror: [] }
+const HERO_RANGE = [5, 10] as const
+
+const withMedia = (list: Movie[]) => list.filter((m) => m.poster_path && m.backdrop_path)
 
 export default function ExplorePage() {
-    const [data, setData] = useState<ExploreData>(EMPTY)
-    const [loading, setLoading] = useState(true)
-
-    useEffect(() => {
+    const { data, loading } = useAsyncData(() =>
         Promise.all([
             tmdbApi.getTopRatedMovies(),
-            tmdbApi.getMoviesByGenre('16,10751'),
-            tmdbApi.getMoviesByGenre(28),
-            tmdbApi.getMoviesByGenre(53),
-            tmdbApi.getMoviesByGenre(27),
-        ]).then(([topRatedRes, kidsRes, actionRes, thrillerRes, horrorRes]) => {
-            const withMedia = (list: Movie[]) => list.filter((m) => m.poster_path && m.backdrop_path)
-            const topRated = withMedia(topRatedRes.results)
-            setData({
-                hero: topRated.slice(5, 10),
-                oscar: topRated,
-                kids: withMedia(kidsRes.results),
-                action: withMedia(actionRes.results),
-                thriller: withMedia(thrillerRes.results),
-                horror: withMedia(horrorRes.results),
-            })
-        }).catch(() => {
-            // API hatası — boş liste ile devam et
-        }).finally(() => {
-            setLoading(false)
-        })
-    }, [])
+            tmdbApi.getMoviesByGenre(GENRE.kidsAndFamily),
+            tmdbApi.getMoviesByGenre(GENRE.action),
+            tmdbApi.getMoviesByGenre(GENRE.thriller),
+            tmdbApi.getMoviesByGenre(GENRE.horror),
+        ])
+    )
+
+    const sections = useMemo(() => {
+        if (!data) return null
+        const [topRatedRes, kidsRes, actionRes, thrillerRes, horrorRes] = data
+        const oscar = withMedia(topRatedRes.results)
+        return {
+            hero: oscar.slice(HERO_RANGE[0], HERO_RANGE[1]),
+            oscar,
+            kids: withMedia(kidsRes.results),
+            action: withMedia(actionRes.results),
+            thriller: withMedia(thrillerRes.results),
+            horror: withMedia(horrorRes.results),
+        }
+    }, [data])
 
     return (
-        <div className="explore-page">
-            {loading && <Spinner />}
-            <Header />
-            <main className="explore-main">
-                {data.hero.length > 0 && <HeroCarousel movies={data.hero} />}
-                <div className="explore-content">
-                    {data.oscar.length > 0 && (
-                        <ContentCarousel type="movie" title="En İyi Oscar Filmleri" items={data.oscar} />
-                    )}
-                    {data.kids.length > 0 && (
-                        <ContentCarousel type="movie" title="Şimdi Çocuk Olmak Vardı" items={data.kids} />
-                    )}
-                    {data.action.length > 0 && (
-                        <ContentCarousel type="movie" title="Aksiyon ve Macera" items={data.action} />
-                    )}
-                    {data.thriller.length > 0 && (
-                        <ContentCarousel type="movie" title="Gerilim ve Heyecan" items={data.thriller} />
-                    )}
-                    {data.horror.length > 0 && (
-                        <ContentCarousel type="movie" title="Korku ve Ürperti" items={data.horror} />
-                    )}
-                </div>
-            </main>
-            <Footer />
-        </div>
+        <PageLayout className="explore-page" mainClassName="explore-main" loading={loading}>
+            {sections && (
+                <>
+                    {sections.hero.length > 0 && <HeroCarousel movies={sections.hero} />}
+                    <div className="explore-content">
+                        <ContentCarousel type="movie" title="En İyi Oscar Filmleri" items={sections.oscar} />
+                        <ContentCarousel type="movie" title="Şimdi Çocuk Olmak Vardı" items={sections.kids} />
+                        <ContentCarousel type="movie" title="Aksiyon ve Macera" items={sections.action} />
+                        <ContentCarousel type="movie" title="Gerilim ve Heyecan" items={sections.thriller} />
+                        <ContentCarousel type="movie" title="Korku ve Ürperti" items={sections.horror} />
+                    </div>
+                </>
+            )}
+        </PageLayout>
     )
 }

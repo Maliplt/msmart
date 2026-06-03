@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import PageLayout from '../components/PageLayout'
 import HeroCarousel from '../components/HeroCarousel'
 import ContentCarousel from '../components/ContentCarousel'
 import GameCarousel from '../components/GameCarousel'
-import Spinner from '../components/Spinner'
 import { tmdbApi } from '../services/tmdb'
 import { useAsyncData } from '../hooks/useAsyncData'
 import type { Movie, TVShow } from '../types/types'
+
+const HERO_COUNT = 5
 
 export default function HomePage() {
     const { data, loading } = useAsyncData(() =>
@@ -25,18 +25,13 @@ export default function HomePage() {
     )
 
     return (
-        <div className="home-page">
-            {loading && <Spinner />}
-            <Header />
-            <main className="home-main">
-                <HeroCarousel movies={movies.slice(0, 5)} />
-                <div className="home-content">
-                    <GameCarousel />
-                    <ContentCarousel type="movie" title="Popüler Filmler" items={movies} />
-                    <ContentCarousel type="tv" title="Popüler Diziler" items={tvShows} />
-                </div>
-            </main>
-            <Footer />
-        </div>
+        <PageLayout className="home-page" mainClassName="home-main" loading={loading}>
+            <HeroCarousel movies={movies.slice(0, HERO_COUNT)} />
+            <div className="home-content">
+                <GameCarousel />
+                <ContentCarousel type="movie" title="Popüler Filmler" items={movies} />
+                <ContentCarousel type="tv" title="Popüler Diziler" items={tvShows} />
+            </div>
+        </PageLayout>
     )
 }
