@@ -1,8 +1,10 @@
 import { useMemo } from 'react'
+import { AlertTriangle } from 'lucide-react'
 import PageLayout from '../components/PageLayout'
 import HeroCarousel from '../components/HeroCarousel'
 import ContentCarousel from '../components/ContentCarousel'
 import GameCarousel from '../components/GameCarousel'
+import StateView from '../components/StateView'
 import { tmdbApi } from '../services/tmdb'
 import { useAsyncData } from '../hooks/useAsyncData'
 import type { Movie, TVShow } from '../types/types'
@@ -10,7 +12,7 @@ import type { Movie, TVShow } from '../types/types'
 const HERO_COUNT = 5
 
 export default function HomePage() {
-    const { data, loading } = useAsyncData(() =>
+    const { data, loading, error } = useAsyncData(() =>
         Promise.all([tmdbApi.getPopularMovies(), tmdbApi.getPopularTVShows()])
     )
 
@@ -26,12 +28,22 @@ export default function HomePage() {
 
     return (
         <PageLayout className="home-page" mainClassName="home-main" loading={loading}>
-            <HeroCarousel movies={movies.slice(0, HERO_COUNT)} />
-            <div className="home-content">
-                <GameCarousel />
-                <ContentCarousel type="movie" title="Popüler Filmler" items={movies} />
-                <ContentCarousel type="tv" title="Popüler Diziler" items={tvShows} />
-            </div>
+            {error ? (
+                <StateView
+                    Icon={AlertTriangle}
+                    title="İçerik yüklenemedi"
+                    description="Veriler getirilirken bir sorun oluştu. Lütfen sayfayı yenileyin."
+                />
+            ) : (
+                <>
+                    <HeroCarousel movies={movies.slice(0, HERO_COUNT)} />
+                    <div className="home-content">
+                        <GameCarousel />
+                        <ContentCarousel type="movie" title="Popüler Filmler" items={movies} />
+                        <ContentCarousel type="tv" title="Popüler Diziler" items={tvShows} />
+                    </div>
+                </>
+            )}
         </PageLayout>
     )
 }

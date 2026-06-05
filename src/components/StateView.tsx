@@ -1,10 +1,11 @@
+import type { ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
 
 interface StateViewProps {
   Icon?: LucideIcon
   title: string
   description?: string
-  action?: React.ReactNode
+  action?: ReactNode
 }
 
 export default function StateView({ Icon, title, description, action }: StateViewProps) {

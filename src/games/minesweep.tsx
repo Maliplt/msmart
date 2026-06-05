@@ -555,7 +555,8 @@ export default function MinesweeperApp() {
         reset();
     }, [reset]);
 
-    useEffect(() => { initBoard(); }, [initBoard]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+        useEffect(() => { initBoard(); }, [initBoard]);
 
     const handleClick = (r: number, c: number) => {
         if (status === 'win' || status === 'lose') return;

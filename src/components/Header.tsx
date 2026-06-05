@@ -3,7 +3,7 @@ import { Navbar, Nav, Button, Stack } from 'rsuite'
 import { Search, Home, Film, Tv, Crown, X, Menu } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { animate } from 'animejs'
-import { useDebounce } from '../hooks/useDebounce'
+import { useDebouncedValue } from '../hooks/useDebouncedValue'
 import Logo from './Logo'
 
 const NAV_LINKS = [
@@ -25,8 +25,9 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const searchWrapperRef = useRef<HTMLDivElement>(null)
 
-  const debouncedQuery = useDebounce(searchQuery.trim(), 400)
+  const debouncedQuery = useDebouncedValue(searchQuery.trim(), 400)
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setMobileMenuOpen(false) }, [location.pathname])
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function Header() {
     } else if (location.pathname === '/search') {
       navigate('/search', { replace: true })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQuery])
 
   useEffect(() => {

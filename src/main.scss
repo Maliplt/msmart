@@ -399,7 +399,7 @@ main {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.05) !important;
     backdrop-filter: blur(12px);
     overflow: hidden;
-    z-index: 1001;
+    z-index: calc(var(--z-header) + 1); // stays within header stacking tier
     transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 
     &.centered-search {
@@ -1666,7 +1666,9 @@ a>.rs-panel {
         align-items: center;
         margin-bottom: var(--space-4);
 
-        h3 {
+        // TSX renders bare <h3>; style by tag (clearly scoped to .gc-header)
+        h3,
+        .gc-header__title {
             color: var(--text-primary);
             font-size: var(--fs-xl);
             font-weight: 700;
@@ -1804,7 +1806,8 @@ a>.rs-panel {
 .app-shell > .explore-page,
 .app-shell > .search-page,
 .app-shell > .packages-page,
-.app-shell > .wip-container {
+.app-shell > .tv-page,
+.app-shell > .wip-page {
     flex: 1;
     min-height: 0;
     display: flex;
@@ -1947,15 +1950,19 @@ a>.rs-panel {
     padding: var(--space-8) var(--space-6);
 }
 
+.wip-page {
+    background-color: var(--bg-0);
+}
+
 .wip-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    background-color: var(--bg-0);
+    flex: 1;
+    min-height: calc(100vh - 72px);
     color: var(--text-primary);
-    padding: calc(72px + var(--space-6)) var(--space-6) var(--space-6);
+    padding: var(--space-12) var(--space-6) var(--space-6);
     text-align: center;
     font-family: var(--font-sans);
 }
@@ -2052,6 +2059,9 @@ a>.rs-panel {
     }
 }
 
+// ORPHAN: .play-page, .play-main, .play-content, .play-title, .play-grid, .play-card
+// These were written for a games-list page that is not yet implemented in TSX.
+// Keep until that page is built; remove if never used.
 .play-page {
     display: flex;
     flex-direction: column;
@@ -2169,14 +2179,14 @@ a>.rs-panel {
 }
 
 .explore-page,
-.tvshows-page {
+.tvshows-page /* ORPHAN: .tvshows-page not yet in TSX */ {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
 .explore-main,
-.tvshows-main {
+.tvshows-main /* ORPHAN: .tvshows-main not yet in TSX */ {
     flex: 1;
 }
 
@@ -2501,7 +2511,7 @@ a>.rs-panel {
     }
 
     .wip-container {
-        padding: calc(60px + var(--space-6)) var(--space-4) var(--space-6);
+        padding: var(--space-8) var(--space-4) var(--space-6);
     }
 
     .btn-play {
@@ -2709,31 +2719,6 @@ a>.rs-panel {
         top: 56px;
         height: calc(100% - 56px);
         padding-top: var(--space-6);
-    }
-}
-
-@media (max-width: $bp-lg) {
-    .packages-main {
-        padding: calc(72px + var(--space-8)) var(--space-6) var(--space-10);
-    }
-
-    .packages-grid {
-        gap: var(--space-4);
-    }
-}
-
-@media (max-width: $bp-md) {
-    .packages-main {
-        padding: calc(60px + var(--space-6)) var(--space-4) var(--space-8);
-    }
-
-    .packages-grid {
-        grid-template-columns: 1fr;
-        max-width: 420px;
-    }
-
-    .packages-hero h1 {
-        font-size: var(--fs-3xl);
     }
 }
 
@@ -3327,7 +3312,7 @@ a>.rs-panel {
     .login-card { max-width: 100%; }
 }
 
-// 15. Paketler SayfasÄ± ========================================================
+// 15. Paketler Sayfası =========================================================
 .packages-page {
     display: flex;
     flex-direction: column;
@@ -3337,6 +3322,9 @@ a>.rs-panel {
 .packages-main {
     flex: 1;
     padding: calc(72px + var(--space-12)) var(--space-10) var(--space-16);
+
+    @include bp($bp-lg) { padding: calc(72px + var(--space-8)) var(--space-6) var(--space-10); }
+    @include bp($bp-md) { padding: calc(60px + var(--space-6)) var(--space-4) var(--space-8); }
 }
 
 .packages-hero {
@@ -3359,14 +3347,16 @@ a>.rs-panel {
         margin-bottom: var(--space-4);
     }
 
-    h1 {
+    &__title {
         font-size: clamp(28px, 4vw, var(--fs-4xl));
         font-weight: 800;
         color: var(--text-primary);
         margin-bottom: var(--space-3);
+
+        @include bp($bp-md) { font-size: var(--fs-3xl); }
     }
 
-    p {
+    &__subtitle {
         font-size: var(--fs-md);
         color: var(--text-secondary);
         max-width: 520px;
@@ -3380,6 +3370,9 @@ a>.rs-panel {
     gap: var(--space-6);
     max-width: 1080px;
     margin: 0 auto;
+
+    @include bp($bp-lg) { gap: var(--space-4); }
+    @include bp($bp-md) { grid-template-columns: 1fr; max-width: 420px; }
 }
 
 .package-card {
@@ -3497,12 +3490,6 @@ a>.rs-panel {
     }
 }
 
-@include bp($bp-md) {
-    .packages-grid {
-        grid-template-columns: 1fr;
-        max-width: 420px;
-    }
-}
 
 // 16. Arama SayfasÄ± ===========================================================
 .search-page {
@@ -3527,7 +3514,9 @@ a>.rs-panel {
     gap: var(--space-4);
     margin-bottom: var(--space-6);
 
-    h2 {
+    // TSX renders bare <h2>; style by tag (clearly scoped to .search-results-header)
+    h2,
+    .search-results-header__title {
         font-size: var(--fs-2xl);
         font-weight: 700;
         margin: 0;
@@ -3545,7 +3534,7 @@ a>.rs-panel {
     }
 
     @include bp($bp-sm) {
-        h2 { font-size: var(--fs-xl); }
+        h2, .search-results-header__title { font-size: var(--fs-xl); }
     }
 }
 
@@ -3680,14 +3669,17 @@ a>.rs-panel {
     min-height: 100vh;
     padding: var(--space-8) var(--space-4);
 
-    h1 {
+    // TSX renders bare <h1> and <p>; style by tag (clearly scoped to .app-error-boundary)
+    h1,
+    .app-error-boundary__title {
         font-size: var(--fs-3xl);
         font-weight: 800;
         color: var(--text-primary);
         margin: 0;
     }
 
-    p {
+    p,
+    .app-error-boundary__desc {
         font-size: var(--fs-md);
         color: var(--text-tertiary);
         margin: 0;
@@ -3748,9 +3740,16 @@ a>.rs-panel {
     z-index: 5;
     color: var(--text-primary);
 
-    p { font-size: var(--fs-lg); color: var(--text-secondary); margin: 0; }
+    // TSX renders bare <p> and <button> inside these containers
+    p,
+    .player-message {
+        font-size: var(--fs-lg);
+        color: var(--text-secondary);
+        margin: 0;
+    }
 
-    button {
+    button,
+    .player-retry-btn {
         margin-top: var(--space-2);
         padding: var(--space-3) var(--space-6);
         background: var(--accent);

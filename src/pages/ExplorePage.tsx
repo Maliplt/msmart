@@ -1,7 +1,9 @@
 import { useMemo } from 'react'
+import { AlertTriangle } from 'lucide-react'
 import PageLayout from '../components/PageLayout'
 import HeroCarousel from '../components/HeroCarousel'
 import ContentCarousel from '../components/ContentCarousel'
+import StateView from '../components/StateView'
 import { tmdbApi } from '../services/tmdb'
 import { useAsyncData } from '../hooks/useAsyncData'
 import type { Movie } from '../types/types'
@@ -18,7 +20,7 @@ const HERO_RANGE = [5, 10] as const
 const withMedia = (list: Movie[]) => list.filter((m) => m.poster_path && m.backdrop_path)
 
 export default function ExplorePage() {
-    const { data, loading } = useAsyncData(() =>
+    const { data, loading, error } = useAsyncData(() =>
         Promise.all([
             tmdbApi.getTopRatedMovies(),
             tmdbApi.getMoviesByGenre(GENRE.kidsAndFamily),
@@ -44,7 +46,13 @@ export default function ExplorePage() {
 
     return (
         <PageLayout className="explore-page" mainClassName="explore-main" loading={loading}>
-            {sections && (
+            {error ? (
+                <StateView
+                    Icon={AlertTriangle}
+                    title="İçerik yüklenemedi"
+                    description="Veriler getirilirken bir sorun oluştu. Lütfen sayfayı yenileyin."
+                />
+            ) : sections && (
                 <>
                     {sections.hero.length > 0 && <HeroCarousel movies={sections.hero} />}
                     <div className="explore-content">

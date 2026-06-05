@@ -354,6 +354,7 @@ export default function WordChainApp() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const fastStreakRef = useRef<number>(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // eslint-disable-next-line react-hooks/purity
   const turnStartRef = useRef<number>(Date.now());
   const chainRef = useRef<ChainItem[]>([]);
   const scoreRef = useRef(0);
@@ -373,22 +374,6 @@ export default function WordChainApp() {
       return new Set([...prev, id]);
     });
   }, []);
-
-  const beginCountdown = useCallback(() => {
-    setScreen("countdown");
-    setCountNum(3);
-    let n = 3;
-    const tick = setInterval(() => {
-      n -= 1;
-      if (n <= 0) {
-        clearInterval(tick);
-        setCountNum(0);
-        setTimeout(() => actuallyStart(), 600);
-      } else {
-        setCountNum(n);
-      }
-    }, 850);
-  }, [mode, levelData]);
 
   const actuallyStart = useCallback(() => {
     const startWord = ALL_WORDS[Math.floor(Math.random() * ALL_WORDS.length)];
@@ -412,6 +397,22 @@ export default function WordChainApp() {
     setTimeout(() => inputRef.current?.focus(), 120);
   }, [mode, levelData]);
 
+  const beginCountdown = useCallback(() => {
+    setScreen("countdown");
+    setCountNum(3);
+    let n = 3;
+    const tick = setInterval(() => {
+      n -= 1;
+      if (n <= 0) {
+        clearInterval(tick);
+        setCountNum(0);
+        setTimeout(() => actuallyStart(), 600);
+      } else {
+        setCountNum(n);
+      }
+    }, 850);
+  }, [actuallyStart]);
+
   const endGame = useCallback((won: boolean, reason: string) => {
     if (timerRef.current) clearInterval(timerRef.current);
     const fc = chainRef.current;
@@ -434,6 +435,21 @@ export default function WordChainApp() {
     setScreen("gameover");
   }, [mode, levelData, unlock]);
 
+  const loseLife = useCallback((reason: string) => {
+    setCombo(0);
+    fastStreakRef.current = 0;
+    setLives((prev) => {
+      const rem = prev - 1;
+      if (rem <= 0) { endGame(false, reason); return 0; }
+      setError(`${reason} -1 can 💔`);
+      setTimeout(() => setError(""), 1500);
+      setTimeLeft(levelData.baseTime);
+      turnStartRef.current = Date.now();
+      setTimeout(() => inputRef.current?.focus(), 60);
+      return rem;
+    });
+  }, [levelData, endGame]);
+
   useEffect(() => {
     if (screen !== "playing" || mode === "zen") {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -451,22 +467,8 @@ export default function WordChainApp() {
       });
     }, 1000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screen, chain, mode]);
-
-  const loseLife = useCallback((reason: string) => {
-    setCombo(0);
-    fastStreakRef.current = 0;
-    setLives((prev) => {
-      const rem = prev - 1;
-      if (rem <= 0) { endGame(false, reason); return 0; }
-      setError(`${reason} -1 can 💔`);
-      setTimeout(() => setError(""), 1500);
-      setTimeLeft(levelData.baseTime);
-      turnStartRef.current = Date.now();
-      setTimeout(() => inputRef.current?.focus(), 60);
-      return rem;
-    });
-  }, [levelData, endGame]);
 
   const aiChoose = useCallback((letter: string, used: Set<string>): string | null => {
     const cands = wordsStartingWith(letter, used);

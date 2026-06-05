@@ -8,6 +8,14 @@ import Spinner from '../components/Spinner'
 import { tmdbApi, getImageUrl } from '../services/tmdb'
 import type { MovieDetail, TVShowDetail, Movie, TVShow, TVSeasonDetail, Episode } from '../types/types'
 
+function formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('tr-TR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    })
+}
+
 export default function OverviewPage() {
     const { type, id } = useParams<{ type: 'movie' | 'tv'; id: string }>()
     const navigate = useNavigate()
@@ -22,6 +30,7 @@ export default function OverviewPage() {
 
     useEffect(() => {
         if (!type || !id) return
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true)
         setDetail(null)
         setSelectedSeason(1)
@@ -41,6 +50,7 @@ export default function OverviewPage() {
 
     useEffect(() => {
         if (type !== 'tv' || !id || loading || !detail) return
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setEpisodesLoading(true)
         tmdbApi.getTVSeasonDetails(Number(id), selectedSeason)
             .then((data) => {
@@ -70,10 +80,6 @@ export default function OverviewPage() {
         }
     }, [detail])
 
-    if (loading || !detail) return (
-        <PageLayout className="overview-page" mainClassName="overview-main" loading />
-    )
-
     const isMovie = type === 'movie'
     const tvDetail = detail as TVShowDetail
     const movieDetail = detail as MovieDetail
@@ -83,20 +89,19 @@ export default function OverviewPage() {
     const runtime = isMovie
         ? movieDetail.runtime ? `${movieDetail.runtime} dk` : null
         : tvDetail.episode_run_time?.[0] ? `${tvDetail.episode_run_time[0]} dk` : null
-    const genres = detail.genres?.map((g) => g.name).join(' / ')
+    const genres = detail?.genres?.map((g) => g.name).join(' / ')
     const director = isMovie
-        ? detail.credits?.crew?.find((c) => c.job === 'Director')?.name
-        : detail.credits?.crew?.find((c) => c.job === 'Executive Producer')?.name
-    const cast = detail.credits?.cast?.slice(0, 5).map((c) => c.name).join(', ')
-    const seasonsInfo = !isMovie && tvDetail.number_of_seasons
+        ? detail?.credits?.crew?.find((c) => c.job === 'Director')?.name
+        : detail?.credits?.crew?.find((c) => c.job === 'Executive Producer')?.name
+    const cast = detail?.credits?.cast?.slice(0, 5).map((c) => c.name).join(', ')
+    const seasonsInfo = !isMovie && tvDetail?.number_of_seasons
         ? `${tvDetail.number_of_seasons} Sezon`
         : null
 
-    const formatDate = (dateStr: string) =>
-        new Date(dateStr).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })
-
     return (
-        <PageLayout className="overview-page" mainClassName="overview-main">
+        <PageLayout className="overview-page" mainClassName="overview-main" loading={loading || !detail}>
+            {detail && (
+                <>
                 <div className="overview-hero">
                     <img
                         className="overview-hero__img"
@@ -183,6 +188,8 @@ export default function OverviewPage() {
                 <div className="overview-similar">
                     <ContentCarousel type={type!} title="Benzer İçerikler" items={similar} />
                 </div>
+                </>
+            )}
         </PageLayout>
     )
 }

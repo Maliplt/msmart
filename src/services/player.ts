@@ -11,8 +11,8 @@ export function getStreamSource(_type?: string, _id?: string | number): string {
 // akis (GET)
 export async function fetchStream(url: string = TEST_HLS): Promise<string | null> {
   try {
-    const res = await axios.get(url, { responseType: 'text' })
-    return res.data as string
+    const res = await axios.get<string>(url, { responseType: 'text' })
+    return res.data
   } catch {
     return null
   }

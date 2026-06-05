@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 
+// ekran genisligine gore gorunur kart sayisi
 function calcCount(width: number): number {
   if (width <= 480) return 2
   if (width <= 768) return 3
@@ -8,8 +9,10 @@ function calcCount(width: number): number {
 }
 
 export function useVisibleCount(): number {
+  // state
   const [count, setCount] = useState(() => calcCount(window.innerWidth))
 
+  // resize
   useEffect(() => {
     const handler = () => setCount(calcCount(window.innerWidth))
     window.addEventListener('resize', handler)

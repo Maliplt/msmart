@@ -86,14 +86,14 @@ const ItemCard = memo(function ItemCard({ item, type }: { item: Movie | TVShow; 
               <button className="cc-item__action-btn play" type="button" onClick={() => navigate(`/${type}/${item.id}`)}>
                 <Play size={12} fill="currentColor" />
               </button>
-              <button className="cc-item__action-btn outline" type="button">
+              <button className="cc-item__action-btn outline" type="button" aria-label="Listeye ekle">
                 <Plus size={12} />
               </button>
-              <button className="cc-item__action-btn outline" type="button">
+              <button className="cc-item__action-btn outline" type="button" aria-label="Begen">
                 <ThumbsUp size={12} />
               </button>
             </div>
-            <button className="cc-item__action-btn outline detail-trigger" type="button">
+            <button className="cc-item__action-btn outline detail-trigger" type="button" aria-label="Detaylar">
               <ChevronDown size={12} />
             </button>
           </div>
@@ -126,11 +126,8 @@ export default function ContentCarousel({ type, title, items }: ContentCarouselP
     return result
   }, [items, visible])
 
-  useEffect(() => {
-    if (slides.length > 0 && activeIndex >= slides.length) {
-      setActiveIndex(slides.length - 1)
-    }
-  }, [slides.length, activeIndex])
+  // Render sirasinda index'i sinirla; effect'te setState gerek kalmaz
+  const currentIndex = slides.length > 0 ? Math.min(activeIndex, slides.length - 1) : 0
 
   const handlePrev = () => {
     setActiveIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1))
@@ -155,8 +152,13 @@ export default function ContentCarousel({ type, title, items }: ContentCarouselP
             {slides.map((_, index) => (
               <span
                 key={index}
-                className={`cc-indicator-dot ${index === activeIndex ? 'active' : ''}`}
+                role="button"
+                tabIndex={0}
+                className={`cc-indicator-dot ${index === currentIndex ? 'active' : ''}`}
+                aria-label={`Slayt ${index + 1}`}
+                aria-current={index === currentIndex ? true : undefined}
                 onClick={() => setActiveIndex(index)}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setActiveIndex(index)}
               />
             ))}
           </div>
@@ -164,13 +166,13 @@ export default function ContentCarousel({ type, title, items }: ContentCarouselP
       </div>
 
       <div className="cc-carousel-wrapper" {...swipe}>
-        {slides.length > 1 && activeIndex > 0 && (
+        {slides.length > 1 && currentIndex > 0 && (
           <button className="cc-nav-arrow prev" onClick={handlePrev} aria-label="Önceki slayt">
             <ChevronLeft size={30} />
           </button>
         )}
 
-        {slides.length > 1 && activeIndex < slides.length - 1 && (
+        {slides.length > 1 && currentIndex < slides.length - 1 && (
           <button className="cc-nav-arrow next" onClick={handleNext} aria-label="Sonraki slayt">
             <ChevronRight size={30} />
           </button>
@@ -178,8 +180,8 @@ export default function ContentCarousel({ type, title, items }: ContentCarouselP
 
         <Carousel
           placement="bottom"
-          activeIndex={activeIndex}
-          onSelect={(index) => setActiveIndex(index)}
+          activeIndex={currentIndex}
+          onSelect={setActiveIndex}
         >
           {slides.map((slide, si) => (
             <div key={si} className="cc-slide">

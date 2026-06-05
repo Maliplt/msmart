@@ -632,6 +632,7 @@ export default function SudokuApp() {
         setTimeout(start, 100);
     }, [reset, start]);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
     useEffect(() => { startGame('orta'); }, []);
 
     const handleCellClick = (r: number, c: number) => {

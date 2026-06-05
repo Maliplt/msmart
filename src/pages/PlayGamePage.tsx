@@ -42,6 +42,7 @@ export default function PlayGamePage() {
     const [bestScore, setBestScore] = useState(() => readBestScore(gameId ?? ''))
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setBestScore(readBestScore(gameId ?? ''))
 
         const interval = setInterval(() => {

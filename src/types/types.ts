@@ -106,6 +106,23 @@ export interface TVSeasonDetail {
     episodes: Episode[]
 }
 
+// Type guards
+export function isMovie(item: Movie | TVShow | SearchResult): item is Movie {
+    return 'title' in item
+}
+
+export function isTVShow(item: Movie | TVShow | SearchResult): item is TVShow {
+    return 'name' in item && !("title" in item)
+}
+
+export function isMovieDetail(detail: MovieDetail | TVShowDetail): detail is MovieDetail {
+    return 'title' in detail
+}
+
+export function isTVShowDetail(detail: MovieDetail | TVShowDetail): detail is TVShowDetail {
+    return 'name' in detail && !("title" in detail)
+}
+
 export interface PackageDef {
     id: string
     name: string

@@ -21,7 +21,7 @@ function App() {
             <ErrorBoundary>
                 <Suspense fallback={<Spinner />}>
                     <Routes>
-                        {/* kalici headerfooter */}
+                        {/* kalici header/footer kabugu */}
                         <Route element={<RootLayout />}>
                             <Route path="/" element={<HomePage />} />
                             <Route path="/explore" element={<ExplorePage />} />
@@ -30,13 +30,13 @@ function App() {
                             <Route path="/tv" element={<TvPage />} />
                             <Route path="/work-in-progress" element={<WorkInProgressPage />} />
                             <Route path="/:type/:id" element={<OverviewPage />} />
-                            <Route path="/:type/:id/player" element={<PlayerPage />} />
                             <Route path="*" element={<WorkInProgressPage />} />
                         </Route>
 
-
+                        {/* tam ekran / bagimsiz sayfalar */}
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/play/:gameId" element={<PlayGamePage />} />
+                        <Route path="/:type/:id/player" element={<PlayerPage />} />
                     </Routes>
                 </Suspense>
             </ErrorBoundary>
