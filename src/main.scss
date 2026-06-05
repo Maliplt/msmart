@@ -3765,17 +3765,6 @@ a>.rs-panel {
     }
 }
 
-.player-loading__spinner {
-    width: 52px;
-    height: 52px;
-    border: 3px solid rgba(255,255,255,0.15);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
 .player-controls {
     position: absolute;
     inset: 0;

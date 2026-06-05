@@ -236,7 +236,12 @@ export default function MediaPlayer({ src, title = '', live = false, startMuted 
 
       {!streamReady && !streamError && (
         <div className="player-loading">
-          <div className="player-loading__spinner" />
+          <div className="spinner-stage">
+            <span className="spinner-pulse" />
+            <span className="spinner-pulse" />
+            <span className="spinner-pulse" />
+            <span className="spinner-core" />
+          </div>
           <p>Akış yükleniyor…</p>
         </div>
       )}
