@@ -5,14 +5,12 @@ import { TURKISH_WORDS, TURKISH_WORD_SET } from "./libraries/sozluk";
 const FONT_URL =
   "https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@600;700;800;900&display=swap";
 
-/* ─────────── WORD DATA ─────────── */
 const normalize = (w: string) => w.toLocaleUpperCase("tr-TR");
 const ALL_WORDS = TURKISH_WORDS;
 const WORD_SET = TURKISH_WORD_SET;
 const lastLetter = (w: string) => w[w.length - 1];
 const firstLetter = (w: string) => w[0];
 
-// Performance: pre-index words by their first letter (45k words → instant lookup)
 const WORDS_BY_FIRST: Record<string, string[]> = (() => {
   const idx: Record<string, string[]> = {};
   for (const w of ALL_WORDS) {
@@ -27,13 +25,11 @@ const wordsStartingWith = (letter: string, used: Set<string>) =>
 const letterDifficulty = (letter: string, used: Set<string>) => {
   const pool = WORDS_BY_FIRST[letter];
   if (!pool) return 0;
-  // count unused without allocating a new array
   let n = 0;
   for (const w of pool) if (!used.has(w)) n++;
   return n;
 };
 
-/* ─────────── MODES ─────────── */
 const MODES = {
   endless: { label: "Sonsuz", emoji: "♾️", desc: "Tek hata = oyun biter", color: "#ff7a59" },
   duel:    { label: "Düello", emoji: "⚔️", desc: "3 can, AI'yı yen", color: "#7c5cff" },
@@ -65,7 +61,6 @@ const ACHIEVEMENTS: Achievement[] = [
   { id: "score800", emoji: "🏆", label: "Yüksek Skor", desc: "Tek turda 800 puan" },
 ];
 
-/* ─────────── STYLES ─────────── */
 const STYLES = `
 @import url('${FONT_URL}');
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -92,7 +87,6 @@ const STYLES = `
   padding: 18px 16px 28px;
 }
 
-/* ── TOP BAR ── */
 .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 10px; }
 .brand { display: flex; flex-direction: column; }
 .brand-title { font-family: 'Baloo 2', cursive; font-size: 26px; font-weight: 800; color: #fff; line-height: 0.95; text-shadow: 0 3px 0 rgba(0,0,0,0.15); }
@@ -109,7 +103,6 @@ const STYLES = `
 .mode-switch-label { font-family: 'Baloo 2', cursive; font-size: 13px; font-weight: 700; color: #fff; }
 .mode-switch-caret { font-size: 10px; color: rgba(255,255,255,0.7); }
 
-/* ── CO-OP COMING SOON RIBBON ── */
 .coop-ribbon {
   position: absolute; top: 18px; left: -42px; z-index: 6;
   transform: rotate(-45deg); transform-origin: center;
@@ -128,14 +121,12 @@ const STYLES = `
 .coop-ribbon .coop-emoji { font-size: 12px; }
 .coop-ribbon .coop-soon { display: block; font-size: 8px; font-weight: 700; opacity: 0.85; letter-spacing: 1px; margin-top: -1px; }
 
-/* ── LEVEL BAR ── */
 .lvlbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .lvl-chip { font-family: 'Baloo 2', cursive; font-size: 12px; font-weight: 800; color: #5a3d00; background: linear-gradient(135deg, #ffe16b, #ffc93c); padding: 5px 11px; border-radius: 50px; white-space: nowrap; box-shadow: 0 3px 0 #e0a920; }
 .lvl-track { flex: 1; height: 10px; background: rgba(0,0,0,0.22); border-radius: 6px; overflow: hidden; }
 .lvl-fill { height: 100%; background: linear-gradient(90deg, #ffe16b, #ffb13c); border-radius: 6px; transition: width 0.6s cubic-bezier(0.34,1.4,0.64,1); box-shadow: 0 0 10px rgba(255,200,80,0.7); }
 .lvl-xp { font-size: 11px; font-weight: 900; color: rgba(255,255,255,0.85); white-space: nowrap; }
 
-/* ── SCORE HERO ── */
 .score-hero { position: relative; text-align: center; margin: 6px 0 14px; }
 .score-combo {
   position: absolute; top: -6px; left: calc(50% - 96px);
@@ -159,7 +150,6 @@ const STYLES = `
 .score-pop { position: absolute; top: 12px; right: calc(50% - 100px); font-family: 'Baloo 2', cursive; font-weight: 800; font-size: 24px; color: #6fffb0; text-shadow: 0 2px 6px rgba(0,0,0,0.25); animation: popUp 0.85s ease forwards; pointer-events: none; z-index: 3; }
 @keyframes popUp { 0%{opacity:0;transform:translateY(10px) scale(0.6)} 25%{opacity:1;transform:translateY(0) scale(1.05)} 100%{opacity:0;transform:translateY(-30px) scale(1)} }
 
-/* ── LIVES / TIMER STRIP ── */
 .midstrip { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 12px; }
 .lives { display: flex; gap: 5px; }
 .life { font-size: 22px; transition: all 0.3s cubic-bezier(0.34,1.6,0.5,1); }
@@ -172,7 +162,6 @@ const STYLES = `
 .timer-track { flex: 1; height: 12px; background: rgba(0,0,0,0.22); border-radius: 7px; overflow: hidden; }
 .timer-fill { height: 100%; border-radius: 7px; transition: width 0.25s linear, background 0.4s; }
 
-/* ── CHAIN ── */
 .chain-card {
   flex: 1; background: rgba(255,255,255,0.94); border-radius: 22px; padding: 16px;
   box-shadow: 0 10px 30px rgba(40,10,60,0.3), inset 0 2px 0 rgba(255,255,255,0.7);
@@ -213,7 +202,6 @@ const STYLES = `
 .aidot:nth-child(2){animation-delay:0.15s} .aidot:nth-child(3){animation-delay:0.3s}
 @keyframes db { 0%,100%{transform:translateY(0);opacity:0.4} 50%{transform:translateY(-5px);opacity:1} }
 
-/* ── INPUT DOCK ── */
 .dock { display: flex; gap: 9px; }
 .wc-input {
   flex: 1; font-family: 'Baloo 2', cursive; font-size: 20px; font-weight: 700; letter-spacing: 1px;
@@ -233,11 +221,9 @@ const STYLES = `
 }
 .send-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #d24a18; }
 
-/* ── ERROR TOAST INLINE ── */
 .err { margin-top: 10px; font-size: 13px; font-weight: 800; color: #fff; background: rgba(220,60,80,0.85); padding: 9px 14px; border-radius: 12px; text-align: center; animation: fadeIn 0.25s ease; }
 @keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
 
-/* ── START SCREEN ── */
 .start-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; text-align: center; }
 .start-hero-emoji { font-size: 64px; animation: float 3s ease-in-out infinite; }
 @keyframes float { 0%,100%{transform:translateY(0) rotate(-4deg)} 50%{transform:translateY(-12px) rotate(4deg)} }
@@ -254,13 +240,11 @@ const STYLES = `
 @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
 .big-start:active { transform: translateY(6px) scale(1); box-shadow: 0 2px 0 #e0a920, 0 4px 12px rgba(0,0,0,0.2); }
 
-/* ── COUNTDOWN ── */
 .countdown-overlay { position: fixed; inset: 0; z-index: 150; display: flex; align-items: center; justify-content: center; background: rgba(40,15,70,0.6); backdrop-filter: blur(6px); }
 .count-num { font-family: 'Baloo 2', cursive; font-size: 160px; font-weight: 800; color: #fff; text-shadow: 0 8px 0 rgba(0,0,0,0.2); animation: countPop 1s cubic-bezier(0.34,1.6,0.5,1); }
 .count-num.go { color: #6fffb0; font-size: 110px; }
 @keyframes countPop { 0%{transform:scale(0.2);opacity:0} 25%{transform:scale(1.25);opacity:1} 70%{transform:scale(1)} 100%{transform:scale(0.7);opacity:0} }
 
-/* ── MODE SHEET ── */
 .sheet-overlay { position: fixed; inset: 0; z-index: 160; display: flex; align-items: flex-end; justify-content: center; background: rgba(30,10,50,0.55); backdrop-filter: blur(4px); animation: fadeIn 0.25s ease; }
 .sheet { width: 100%; max-width: 440px; background: #fff; border-radius: 28px 28px 0 0; padding: 22px 18px 30px; animation: sheetUp 0.35s cubic-bezier(0.34,1.4,0.64,1); }
 @keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
@@ -275,7 +259,6 @@ const STYLES = `
 .mode-opt-desc { font-size: 12.5px; font-weight: 700; color: #9a8aa8; }
 .mode-opt-check { font-size: 20px; color: var(--mc); }
 
-/* ── GAME OVER ── */
 .go-overlay { position: fixed; inset: 0; z-index: 170; display: flex; align-items: center; justify-content: center; background: rgba(30,10,50,0.7); backdrop-filter: blur(6px); padding: 18px; animation: fadeIn 0.4s ease; }
 .go-card { width: 100%; max-width: 380px; background: #fff; border-radius: 28px; padding: 30px 26px; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.4); animation: goPop 0.45s cubic-bezier(0.34,1.5,0.64,1); }
 @keyframes goPop { 0%{transform:scale(0.8) translateY(20px);opacity:0} 100%{transform:scale(1) translateY(0);opacity:1} }
@@ -301,7 +284,6 @@ const STYLES = `
 .go-btn.ghost { color: #7c5cff; background: #f0ebfa; }
 .go-btn.ghost:active { transform: scale(0.97); }
 
-/* ── ACHIEVEMENTS MINI (in start) ── */
 .ach-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
 .ach { font-size: 20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: rgba(255,255,255,0.14); border: 1.5px solid rgba(255,255,255,0.22); position: relative; }
 .ach.on { background: rgba(255,225,107,0.25); border-color: rgba(255,225,107,0.6); }
@@ -392,7 +374,6 @@ export default function WordChainApp() {
     });
   }, []);
 
-  /* ── COUNTDOWN then start ── */
   const beginCountdown = useCallback(() => {
     setScreen("countdown");
     setCountNum(3);
@@ -401,13 +382,12 @@ export default function WordChainApp() {
       n -= 1;
       if (n <= 0) {
         clearInterval(tick);
-        setCountNum(0); // "GO"
+        setCountNum(0);
         setTimeout(() => actuallyStart(), 600);
       } else {
         setCountNum(n);
       }
     }, 850);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, levelData]);
 
   const actuallyStart = useCallback(() => {
@@ -454,7 +434,6 @@ export default function WordChainApp() {
     setScreen("gameover");
   }, [mode, levelData, unlock]);
 
-  /* ── TIMER ── */
   useEffect(() => {
     if (screen !== "playing" || mode === "zen") {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -472,7 +451,6 @@ export default function WordChainApp() {
       });
     }, 1000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screen, chain, mode]);
 
   const loseLife = useCallback((reason: string) => {
@@ -490,16 +468,12 @@ export default function WordChainApp() {
     });
   }, [levelData, endGame]);
 
-  /* ── SMART AI ── */
   const aiChoose = useCallback((letter: string, used: Set<string>): string | null => {
     const cands = wordsStartingWith(letter, used);
     if (!cands.length) return null;
-    // Fast path for random play (low levels) — skip expensive ranking entirely
     if (Math.random() >= levelData.aiSkill) {
       return cands[Math.floor(Math.random() * cands.length)];
     }
-    // Defensive ranking: prefer words whose ending letter leaves the player few options.
-    // Cache difficulty by ending letter so we don't recompute for every candidate.
     const diffCache: Record<string, number> = {};
     const diffOf = (w: string) => {
       const e = lastLetter(w);
@@ -572,7 +546,6 @@ export default function WordChainApp() {
       const aiWord = aiChoose(aiLetter, newUsed);
       if (!aiWord) {
         if (mode === "duel") { endGame(true, "AI takıldı!"); return; }
-        // endless/zen: AI stuck → bonus + reseed, keep going
         const bonus = newScore + 50;
         setScore(bonus);
         setScorePop("+50 BONUS");
@@ -628,7 +601,7 @@ export default function WordChainApp() {
         <div className="blob" style={{ bottom: "12%", left: "-4%", width: 130, height: 130, background: "#ff5e9e" }} />
 
         <div className="wcg-inner">
-          {/* TOP BAR */}
+
           <div className="topbar">
             <div className="brand">
               <div className="brand-title">Kelime<br /><span>Zinciri</span></div>
@@ -640,14 +613,12 @@ export default function WordChainApp() {
             </div>
           </div>
 
-          {/* LEVEL BAR */}
           <div className="lvlbar">
             <div className="lvl-chip">Sv {levelData.level} · {levelData.name}</div>
             <div className="lvl-track"><div className="lvl-fill" style={{ width: `${xpPct}%` }} /></div>
             <div className="lvl-xp">{xp} XP</div>
           </div>
 
-          {/* SCORE HERO */}
           <div className="score-hero">
             {combo >= 2 && (
               <div className={`score-combo${comboBump ? " bump" : ""}`}>×{Math.min(combo, 12)}</div>
@@ -660,7 +631,7 @@ export default function WordChainApp() {
 
           {inGame && (
             <>
-              {/* LIVES / TIMER */}
+
               <div className="midstrip">
                 {mode === "zen" ? (
                   <div className="zen-tag">🍃 Zen Modu</div>
@@ -681,7 +652,6 @@ export default function WordChainApp() {
                 )}
               </div>
 
-              {/* CHAIN CARD */}
               <div className="chain-card">
                 <div className="req-row">
                   <div className="req-letter-box">
@@ -717,7 +687,6 @@ export default function WordChainApp() {
                 )}
               </div>
 
-              {/* INPUT DOCK */}
               <div className="dock">
                 <input
                   ref={inputRef}
@@ -738,7 +707,6 @@ export default function WordChainApp() {
             </>
           )}
 
-          {/* START SCREEN */}
           {screen === "start" && (
             <div className="start-screen">
               <div className="start-hero-emoji">🔗</div>
@@ -758,7 +726,6 @@ export default function WordChainApp() {
           )}
         </div>
 
-        {/* COUNTDOWN */}
         {screen === "countdown" && (
           <div className="countdown-overlay">
             <div key={countNum} className={`count-num${countNum === 0 ? " go" : ""}`}>
@@ -767,7 +734,6 @@ export default function WordChainApp() {
           </div>
         )}
 
-        {/* MODE SHEET */}
         {sheetOpen && (
           <div className="sheet-overlay" onClick={() => setSheetOpen(false)}>
             <div className="sheet" onClick={(e: React.MouseEvent) => e.stopPropagation()}>
@@ -799,7 +765,6 @@ export default function WordChainApp() {
           </div>
         )}
 
-        {/* GAME OVER */}
         {screen === "gameover" && (
           <div className="go-overlay">
             <div className="go-card">

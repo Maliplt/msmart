@@ -1,74 +1,75 @@
-/* Custom styles can go here */
 // =============================================================================
-// MSmart — Global Stylesheet (Dark Mode Only)
+// Lumii â€” Stil DosyasÄ± (Koyu Tema)
 // -----------------------------------------------------------------------------
-// Sections:
-//   1. Design Tokens (variables)
-//   2. Mixins & Helpers
-//   3. Reset & Base
-//   4. Typography
-//   5. Layout Primitives
-//   6. RSuite Overrides (Navbar, Button, Input, Panel, Carousel, Nav)
-//   7. Components
-//        7.1  Header
-//        7.2  Footer
-//        7.3  HeroCarousel
-//        7.4  ContentCarousel + ItemCard
-//        7.5  ContentCard
-//        7.6  Spinner
-//   8. Pages
-//        8.1  HomePage
-//        8.2  OverviewPage
-//   9. Utilities
-//   10. Scrollbar
-//   11. Responsive Breakpoints
+// BÃ¶lÃ¼mler:
+//    1. TasarÄ±m DeÄŸiÅŸkenleri      7. Hero Karuseli        13. Responsive
+//    2. YardÄ±mcÄ±lar (mixin)       8. Ä°Ã§erik Karuseli       14. Login SayfasÄ±
+//    3. SÄ±fÄ±rlama & Tipografi     9. Oyun Karuseli         15. Paketler SayfasÄ±
+//    4. Header & Arama           10. Sayfalar              16. Arama SayfasÄ±
+//    5. RSuite Ezmeleri          11. YardÄ±mcÄ± SÄ±nÄ±flar
+//    6. Footer                   12. KaydÄ±rma Ã‡ubuÄŸu
 // =============================================================================
 
 
-// 1. Design Tokens ============================================================
+// 1. TasarÄ±m DeÄŸiÅŸkenleri =====================================================
+// â”€â”€ Renk paleti (KAYNAK) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// TemayÄ± deÄŸiÅŸtirmek iÃ§in yalnÄ±zca aÅŸaÄŸÄ±daki seed deÄŸerlerini dÃ¼zenle.
+// MarkayÄ± tek noktadan deÄŸiÅŸtirmek iÃ§in $brand yeterli; soft/glow/gÃ¶lge gibi
+// tÃ¼revler ondan otomatik Ã¼retilir. YÃ¼zey, metin ve durum tonlarÄ± da burada.
+$brand:            #ff6a00; // ana marka rengi (accent)
+$brand-hover:      #ff8224; // aÃ§Ä±k ton
+$brand-active:     #d45500; // koyu ton
 
+$surface-0:        #07070b; // uygulama arka planÄ± (en koyu)
+$surface-1:        #0d0d14; // kart / panel
+$surface-2:        #14141d; // hover yÃ¼zeyi
+$surface-3:        #1c1c28; // input / aktif yÃ¼zey
+$surface-elevated: #181822;
+
+$text:             #f5f5f7; // ana metin (tÃ¼revleri alfa ile)
+$paper:            #ffffff; // kenarlÄ±k / parlaklÄ±k tabanÄ±
+$ink:              #000000; // gÃ¶lge / overlay tabanÄ±
+
+$success:          #2ecc71;
+$warning:          #f5a623;
+$danger:           #ff4d4f;
+
+// Token'lar (yukarÄ±daki seed'lerden tÃ¼retilir; bunlara dokunmaya gerek yok)
 :root {
-    // Surfaces
-    --bg-0: #07070b; // app background
-    --bg-1: #0d0d14; // raised surfaces (cards, panels)
-    --bg-2: #14141d; // hover surfaces
-    --bg-3: #1c1c28; // active surfaces / inputs
-    --bg-elevated: #181822;
+    --bg-0: #{$surface-0};
+    --bg-1: #{$surface-1};
+    --bg-2: #{$surface-2};
+    --bg-3: #{$surface-3};
+    --bg-elevated: #{$surface-elevated};
 
-    // Borders
-    --border-subtle: rgba(255, 255, 255, 0.06);
-    --border-default: rgba(255, 255, 255, 0.1);
-    --border-strong: rgba(255, 255, 255, 0.18);
+    --border-subtle: #{rgba($paper, 0.06)};
+    --border-default: #{rgba($paper, 0.1)};
+    --border-strong: #{rgba($paper, 0.18)};
 
-    // Text
-    --text-primary: #f5f5f7;
-    --text-secondary: rgba(245, 245, 247, 0.72);
-    --text-tertiary: rgba(245, 245, 247, 0.5);
-    --text-muted: rgba(245, 245, 247, 0.32);
-    --text-disabled: rgba(245, 245, 247, 0.2);
+    --text-primary: #{$text};
+    --text-secondary: #{rgba($text, 0.72)};
+    --text-tertiary: #{rgba($text, 0.5)};
+    --text-muted: #{rgba($text, 0.32)};
+    --text-disabled: #{rgba($text, 0.2)};
 
-    // Brand / Accent
-    --accent: #ff6a00;
-    --accent-hover: #ff8224;
-    --accent-active: #d45500;
-    --accent-soft: rgba(255, 106, 0, 0.12);
+    --accent: #{$brand};
+    --accent-hover: #{$brand-hover};
+    --accent-active: #{$brand-active};
+    --accent-soft: #{rgba($brand, 0.12)};
+    --accent-glow: #{rgba($brand, 0.5)};
 
-    // States
-    --success: #2ecc71;
-    --warning: #f5a623;
-    --danger: #ff4d4f;
+    --success: #{$success};
+    --warning: #{$warning};
+    --danger: #{$danger};
 
-    // Overlays
-    --overlay-strong: rgba(0, 0, 0, 0.85);
-    --overlay-medium: rgba(0, 0, 0, 0.55);
-    --overlay-soft: rgba(0, 0, 0, 0.3);
+    --overlay-strong: #{rgba($ink, 0.85)};
+    --overlay-medium: #{rgba($ink, 0.55)};
+    --overlay-soft: #{rgba($ink, 0.3)};
 
-    // Radii
     --radius-0: 0px;
     --radius-1: 2px;
     --radius-pill: 999px;
 
-    // Spacing scale (4px base)
     --space-1: 4px;
     --space-2: 8px;
     --space-3: 12px;
@@ -80,9 +81,15 @@
     --space-12: 48px;
     --space-16: 64px;
 
-    // Typography
+    // GÃ¶vde / arayÃ¼z fontu
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
         'Helvetica Neue', Arial, sans-serif;
+    // BaÅŸlÄ±k fontu
+    --font-display: 'Sora', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        sans-serif;
+    // Logo / marka fontu
+    --font-logo: 'Unbounded', 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
     --fs-xs: 11px;
@@ -96,20 +103,17 @@
     --fs-4xl: 40px;
     --fs-hero: 48px;
 
-    // Shadows
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
-    --shadow-glow: 0 0 24px rgba(255, 106, 0, 0.35);
+    --shadow-sm: 0 1px 2px #{rgba($ink, 0.4)};
+    --shadow-md: 0 4px 12px #{rgba($ink, 0.5)};
+    --shadow-lg: 0 12px 32px #{rgba($ink, 0.6)};
+    --shadow-glow: 0 0 24px #{rgba($brand, 0.35)};
 
-    // Motion
     --ease: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     --dur-fast: 140ms;
     --dur-base: 220ms;
     --dur-slow: 380ms;
 
-    // Z-index scale
     --z-base: 1;
     --z-sticky: 100;
     --z-header: 500;
@@ -117,9 +121,7 @@
     --z-spinner: 9999;
 }
 
-
-// 2. Mixins & Helpers =========================================================
-
+// 2. YardÄ±mcÄ±lar (mixin & breakpoint) =========================================
 @mixin gradient-overlay-bottom($from: 0.9, $mid: 0.2) {
     background: linear-gradient(to top,
             rgba(0, 0, 0, $from) 0%,
@@ -142,20 +144,16 @@
     transition: $props $dur var(--ease);
 }
 
-// Breakpoint tokens — single source of truth for all responsive rules.
-// Usage: @include bp($bp-md) { ... }
-$bp-xl: 1200px; // minor desktop tweaks
-$bp-lg: 1024px; // tablet
-$bp-md:  768px; // small tablet / landscape mobile
-$bp-sm:  480px; // portrait mobile
+$bp-xl: 1200px;
+$bp-lg: 1024px;
+$bp-md:  768px;
+$bp-sm:  480px;
 
 @mixin bp($max) {
     @media (max-width: $max) { @content; }
 }
 
-
-// 3. Reset & Base =============================================================
-
+// 3. SÄ±fÄ±rlama & Temel Tipografi ==============================================
 *,
 *::before,
 *::after {
@@ -218,9 +216,6 @@ button {
     color: #fff;
 }
 
-
-// 4. Typography ===============================================================
-
 h1,
 h2,
 h3,
@@ -228,6 +223,7 @@ h4,
 h5,
 h6 {
     margin: 0;
+    font-family: var(--font-display);
     font-weight: 700;
     color: var(--text-primary);
     letter-spacing: -0.01em;
@@ -274,9 +270,6 @@ strong {
     font-weight: 600;
 }
 
-
-// 5. Layout Primitives ========================================================
-
 main {
     flex: 1;
     display: block;
@@ -299,10 +292,29 @@ main {
     min-height: 100vh;
 }
 
+// 4. Header & Arama ===========================================================
+// Lumii kelime-markasÄ± (Header / Footer / Spinner)
+.lumii-logo {
+    font-family: var(--font-logo);
+    font-weight: 700;
+    font-size: inherit;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    display: inline-flex;
+    align-items: baseline;
+    white-space: nowrap;
+    user-select: none;
+}
 
-// 6. RSuite Overrides =========================================================
+.lumii-logo__lead {
+    color: var(--text-primary);
+}
 
-// --- Navbar ------------------------------------------------------------------
+.lumii-logo__spark {
+    color: var(--accent);
+    text-shadow: 0 0 16px var(--accent-glow), 0 0 5px var(--accent-glow);
+}
+
 .custom-header {
     position: fixed !important;
     top: 0 !important;
@@ -318,7 +330,6 @@ main {
     border-bottom: none !important;
     transition: background-color 0.4s ease, box-shadow 0.4s ease !important;
 
-    // Pseudo-element gradient for hardware-accelerated, flicker-free hover transitions!
     &::before {
         content: '';
         position: absolute;
@@ -335,7 +346,7 @@ main {
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6) !important;
 
         &::before {
-            opacity: 0; // Fades out the gradient perfectly
+            opacity: 0;
         }
     }
 
@@ -376,7 +387,6 @@ main {
     }
 }
 
-// Sleek expanding animated search overlay style
 .animated-search-container {
     background: rgba(24, 24, 35, 0.94) !important;
     border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
@@ -452,7 +462,6 @@ main {
     }
 }
 
-// --- Nav ---------------------------------------------------------------------
 .rs-nav {
     background: transparent !important;
     display: flex !important;
@@ -477,7 +486,7 @@ main {
     }
 
     .rs-nav-item {
-        padding: var(--space-4) 20px !important; // Add spacious padding
+        padding: var(--space-4) 20px !important;
         height: 100% !important;
     }
 
@@ -498,7 +507,6 @@ main {
         }
     }
 
-    // Active state
     .rs-nav-item-active,
     .rs-nav-item-active span,
     .rs-nav-item-active svg {
@@ -522,7 +530,6 @@ main {
     }
 }
 
-// Header custom buttons
 .search-btn {
     color: #ffffff !important;
     background-color: transparent !important;
@@ -585,7 +592,7 @@ main {
     }
 }
 
-// --- Button ------------------------------------------------------------------
+// 5. RSuite Ezmeleri ==========================================================
 .rs-btn {
     border-radius: var(--radius-0);
     font-weight: 600;
@@ -645,7 +652,6 @@ main {
     }
 }
 
-// Custom dots styling for RSuite Carousel
 .rs-carousel-indicator,
 .rs-carousel-toolbar {
     z-index: 50 !important;
@@ -719,7 +725,6 @@ main {
     }
 }
 
-// --- Input -------------------------------------------------------------------
 .rs-input {
     background-color: var(--bg-3);
     color: var(--text-primary);
@@ -744,7 +749,6 @@ main {
     }
 }
 
-// --- Panel -------------------------------------------------------------------
 .rs-panel {
     background-color: var(--bg-1);
     border-radius: var(--radius-0);
@@ -759,7 +763,6 @@ main {
     }
 }
 
-// --- Carousel ----------------------------------------------------------------
 .rs-carousel {
     background-color: transparent;
     border-radius: var(--radius-0);
@@ -769,7 +772,6 @@ main {
         background-color: var(--bg-0);
     }
 
-    // Indicators (bar shape)
     .rs-carousel-toolbar {
         .rs-carousel-label-wrapper {
             input:checked+label {
@@ -789,18 +791,13 @@ main {
     }
 }
 
-// --- Stack -------------------------------------------------------------------
 .rs-stack {
     align-items: center;
 }
 
-
-// 7. Components ===============================================================
-
-// 7.1 Header ------------------------------------------------------------------
-
 .header-brand-link {
     color: var(--accent) !important;
+    font-family: var(--font-display) !important;
     font-size: 28px !important;
     font-weight: 800 !important;
     letter-spacing: 0.02em !important;
@@ -865,7 +862,6 @@ main {
     }
 }
 
-// Mobile nav overlay
 .mobile-nav-overlay {
     position: fixed;
     inset: 0;
@@ -936,27 +932,151 @@ main {
     gap: var(--space-3);
 }
 
-// 7.2 Footer ------------------------------------------------------------------
-.rs-footer {
+// 6. Footer ===================================================================
+.site-footer {
     background-color: var(--bg-0);
     border-top: 1px solid var(--border-subtle);
-    color: var(--text-muted);
-    text-align: center;
-    padding: var(--space-6) var(--space-4);
-    font-size: var(--fs-xs);
-    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    margin-top: auto;
 
-    p {
+    .site-footer__inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: var(--space-12) var(--space-8) var(--space-6);
+    }
+
+    .site-footer__top {
+        display: flex;
+        justify-content: space-between;
+        gap: var(--space-12);
+        flex-wrap: wrap;
+        padding-bottom: var(--space-8);
+        border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .site-footer__brand {
+        max-width: 320px;
+        min-width: 220px;
+    }
+
+    .site-footer__logo {
+        display: inline-flex;
+        font-size: var(--fs-2xl);
+    }
+
+    .site-footer__tagline {
+        margin: var(--space-3) 0 var(--space-5);
+        font-size: var(--fs-sm);
+        line-height: 1.6;
+        color: var(--text-secondary);
+    }
+
+    .site-footer__socials {
+        display: flex;
+        gap: var(--space-3);
+    }
+
+    .site-footer__social {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: var(--radius-pill);
+        background: var(--bg-2);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        @include smooth(transform background-color border-color color box-shadow, var(--dur-fast));
+
+        &:hover {
+            color: #fff;
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+    }
+
+    .site-footer__cols {
+        display: flex;
+        gap: var(--space-12);
+        flex-wrap: wrap;
+    }
+
+    .site-footer__col-title {
+        margin: 0 0 var(--space-4);
+        font-size: var(--fs-sm);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-primary);
+    }
+
+    .site-footer__links {
+        list-style: none;
         margin: 0;
-        color: inherit;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    .site-footer__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: var(--fs-sm);
+        color: var(--text-tertiary);
+        text-decoration: none;
+        @include smooth(color transform, var(--dur-fast));
+
+        &:hover {
+            color: var(--accent);
+            transform: translateX(3px);
+        }
+
+        .site-footer__link-icon {
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+    }
+
+    .site-footer__bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        padding-top: var(--space-5);
+    }
+
+    .site-footer__copyright {
+        font-size: var(--fs-xs);
+        color: var(--text-muted);
+        letter-spacing: 0.03em;
+    }
+
+    .site-footer__legal {
+        display: flex;
+        gap: var(--space-5);
+        flex-wrap: wrap;
+    }
+
+    .site-footer__legal-link {
+        font-size: var(--fs-xs);
+        color: var(--text-muted);
+        text-decoration: none;
+        @include smooth(color, var(--dur-fast));
+
+        &:hover {
+            color: var(--text-secondary);
+        }
     }
 }
 
-// 7.3 HeroCarousel ------------------------------------------------------------
+// 7. Hero Karuseli ============================================================
 .hero-carousel-inner {
     height: 80vh !important;
-    // dvh = dynamic viewport height (excludes mobile browser chrome).
-    // Supported in Chrome 108+, Safari 15.4+, Firefox 101+ — vh is the fallback.
     height: 80dvh !important;
 }
 
@@ -969,27 +1089,29 @@ main {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        background: rgba(0, 0, 0, 0.4) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: rgba(10, 10, 14, 0.4) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         color: #ffffff !important;
-        width: 56px !important;
-        height: 56px !important;
+        width: 50px !important;
+        height: 50px !important;
         border-radius: 50% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         cursor: pointer;
         z-index: 15;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        transition: background-color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        opacity: 0.7;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+        transition: opacity 0.25s var(--ease), background-color 0.2s var(--ease), border-color 0.2s var(--ease), transform 0.2s var(--ease);
 
         &:hover {
-            background: var(--accent) !important;
-            border-color: var(--accent) !important;
+            opacity: 1;
+            background: rgba(22, 22, 28, 0.72) !important;
+            border-color: rgba(255, 255, 255, 0.45) !important;
             color: #ffffff !important;
-            transform: translateY(-50%) scale(1.1) !important;
-            box-shadow: 0 0 20px rgba(255, 106, 0, 0.4) !important;
+            transform: translateY(-50%) scale(1.06) !important;
         }
 
         &:active {
@@ -1003,6 +1125,10 @@ main {
         &.next {
             right: 24px;
         }
+    }
+
+    &:hover .hero-nav-btn {
+        opacity: 1;
     }
 
     .hero-bottom-fade {
@@ -1021,7 +1147,7 @@ main {
     position: relative;
     height: 100%;
 
-    img {
+    .hero-slide__img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -1042,7 +1168,7 @@ main {
         max-width: 600px;
         z-index: 12;
 
-        h1 {
+        .hero-info__title {
             font-size: clamp(28px, 4vw, var(--fs-hero));
             font-weight: 700;
             margin: 0;
@@ -1064,11 +1190,17 @@ main {
             line-height: 1.5;
             color: rgba(255, 255, 255, 0.92);
             text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: calc(1.5em * 3);
         }
     }
 }
 
-// 7.4 ContentCarousel + ItemCard ----------------------------------------------
+// 8. Ä°Ã§erik Karuseli ==========================================================
 .content-carousel {
     margin-bottom: var(--space-8);
 
@@ -1079,7 +1211,7 @@ main {
         margin-bottom: var(--space-4);
         padding-right: var(--space-2);
 
-        h3 {
+        .cc-header__title {
             color: var(--text-primary);
             font-size: var(--fs-xl);
             font-weight: 700;
@@ -1127,7 +1259,6 @@ main {
         }
     }
 
-    // Hide RSuite's default indicators and toolbar below the content carousel
     .rs-carousel-toolbar,
     .rs-carousel-indicator {
         display: none !important;
@@ -1172,11 +1303,11 @@ main {
 
     &:hover {
         color: var(--accent) !important;
-        
+
         &.prev {
             background: linear-gradient(to right, rgba(7, 7, 11, 0.98) 0%, rgba(7, 7, 11, 0.3) 100%);
         }
-        
+
         &.next {
             background: linear-gradient(to left, rgba(7, 7, 11, 0.98) 0%, rgba(7, 7, 11, 0.3) 100%);
         }
@@ -1198,17 +1329,10 @@ main {
         display: none;
     }
 
-    // On touch devices the nav arrows are hidden entirely:
-    //  • Swipe handlers on .cc-carousel-wrapper already cover navigation.
-    //  • Visible arrows intercept touch events, breaking swipe.
-    //  • They also visually overlap the item overlay text.
     .cc-carousel-wrapper .cc-nav-arrow {
         display: none;
     }
 
-    // Same reasoning for the hero carousel — RSuite Carousel handles
-    // touch-swipe natively; dot indicators remain as visual guides.
-    // Must match specificity of base .hero-carousel-wrapper .hero-nav-btn rule.
     .hero-carousel-wrapper .hero-nav-btn {
         display: none !important;
     }
@@ -1246,11 +1370,11 @@ main {
         border-right: none;
     }
 
-    a {
+    .cc-item__link {
         display: block !important;
     }
 
-    img {
+    .cc-item__poster {
         width: 100%;
         height: 25vw;
         object-fit: cover;
@@ -1260,7 +1384,7 @@ main {
     }
 
     &:hover {
-        img {
+        .cc-item__poster {
             filter: brightness(1.2);
         }
 
@@ -1319,7 +1443,7 @@ main {
     color: var(--text-secondary);
 
     .cc-item__rating {
-        color: #ffb800 !important; // beautiful golden star
+        color: #ffb800 !important;
     }
 
     .cc-item__year {
@@ -1359,8 +1483,8 @@ main {
 
 .cc-item:hover {
     .cc-item__overview {
-        animation: marqueeTextVertical 18s linear infinite;
-        animation-delay: 1.5s;
+        animation: marqueeTextVertical 14s linear infinite;
+        animation-delay: 0.6s;
     }
 }
 
@@ -1368,7 +1492,7 @@ main {
     0% {
         transform: translateY(0);
     }
-    10% {
+    5% {
         transform: translateY(0);
     }
     85% {
@@ -1379,8 +1503,6 @@ main {
     }
 }
 
-// 7.5 ContentCard -------------------------------------------------------------
-// Wraps inside an <a> with Panel
 a>.rs-panel {
     background-color: var(--bg-1);
     border: 1px solid var(--border-subtle);
@@ -1428,52 +1550,112 @@ a>.rs-panel {
     }
 }
 
-// 7.6 Spinner -----------------------------------------------------------------
-@keyframes spinner-spin {
-    to { transform: rotate(360deg); }
-}
-@keyframes spinner-fade {
-    0%, 100% { opacity: 0.4; }
-    50%       { opacity: 1; }
-}
-
+// Lumii spinner â€” Ä±ÅŸÄ±k nabzÄ±. Saf CSS (yalnÄ±zca transform/opacity â†’ GPU
+// compositor); sÃ¼rekli JS/rAF dÃ¶ngÃ¼sÃ¼ yok, Ã§ok hafif.
 .spinner-overlay {
     position: fixed;
     inset: 0;
     z-index: var(--z-spinner);
     background: rgba(7, 7, 11, 0.92);
     backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 24px;
 }
 
-.spinner-ring {
-    width: 56px;
-    height: 56px;
+// Ä°Ã§erik-iÃ§i (inline) varyant: tam ekran kaplamaz, header/footer gÃ¶rÃ¼nÃ¼r kalÄ±r.
+.spinner-overlay--inline {
+    position: relative;
+    inset: auto;
+    z-index: 1;
+    flex: 1 1 auto;
+    min-height: 55vh;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+.spinner-stage {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: grid;
+    place-items: center;
+}
+
+.spinner-pulse {
+    position: absolute;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
-    border: 4px solid rgba(249, 115, 22, 0.1);
-    border-top-color: #ff6a00;
-    border-right-color: rgba(255, 106, 0, 0.4);
-    border-bottom-color: rgba(255, 106, 0, 0.2);
-    box-shadow: 0 0 24px rgba(255, 106, 0, 0.25);
-    animation: spinner-spin 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 22px var(--accent-glow);
+    opacity: 0;
+    transform: scale(0.28);
+    will-change: transform, opacity;
+    animation: lumiiPulse 2.1s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+.spinner-pulse:nth-child(2) { animation-delay: 0.7s; }
+.spinner-pulse:nth-child(3) { animation-delay: 1.4s; }
+
+.spinner-core {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, var(--accent-hover) 0%, var(--accent) 55%, var(--accent-active) 100%);
+    box-shadow: 0 0 30px var(--accent-glow), 0 0 14px var(--accent);
+    will-change: transform;
+    animation: lumiiBreathe 1.8s ease-in-out infinite;
+}
+
+.spinner-logo {
+    font-size: 30px;
 }
 
 .spinner-label {
-    color: #ff6a00;
+    color: var(--text-tertiary);
     font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    animation: spinner-fade 1.6s ease-in-out infinite;
-    text-shadow: 0 0 8px rgba(255, 106, 0, 0.3);
+    animation: lumiiLabel 1.9s ease-in-out infinite;
 }
 
+@keyframes lumiiPulse {
+    0%   { transform: scale(0.28); opacity: 0; }
+    18%  { opacity: 0.6; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
 
-// 7.7 GameCarousel -------------------------------------------------------------
+@keyframes lumiiBreathe {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.14); }
+}
+
+@keyframes lumiiLabel {
+    0%, 100% { opacity: 0.4; }
+    50%      { opacity: 0.85; }
+}
+
+// Hareket azaltma tercihi: animasyonlarÄ± durdur
+@media (prefers-reduced-motion: reduce) {
+    .spinner-pulse,
+    .spinner-core,
+    .spinner-label {
+        animation: none;
+    }
+    .spinner-pulse:first-child {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+}
+
+// 9. Oyun Karuseli ============================================================
 .game-carousel {
     margin-bottom: var(--space-8);
     padding: 0 var(--space-2);
@@ -1508,9 +1690,9 @@ a>.rs-panel {
 .gc-wrapper {
     width: 100%;
     overflow-x: auto;
-    scrollbar-width: none; // hide scrollbar firefox
+    scrollbar-width: none;
     &::-webkit-scrollbar {
-        display: none; // hide scrollbar chrome/safari
+        display: none;
     }
 }
 
@@ -1608,10 +1790,27 @@ a>.rs-panel {
     }
 }
 
+// 10. Sayfalar (Home / Overview / Oyun / WIP) =================================
+// KalÄ±cÄ± kabuk: Header (fixed) + sayfa + Footer. Sayfa flex:1 ile bÃ¼yÃ¼r,
+// bÃ¶ylece Footer her zaman dibe yapÄ±ÅŸÄ±r.
+.app-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-// 8. Pages ====================================================================
+.app-shell > .home-page,
+.app-shell > .overview-page,
+.app-shell > .explore-page,
+.app-shell > .search-page,
+.app-shell > .packages-page,
+.app-shell > .wip-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
 
-// 8.1 HomePage ----------------------------------------------------------------
 .home-page {
     display: flex;
     flex-direction: column;
@@ -1622,14 +1821,20 @@ a>.rs-panel {
     flex: 1;
 }
 
-.home-content {
-    padding: var(--space-8) var(--space-6);
+.home-content,
+.explore-content {
+    padding: var(--space-8) var(--space-10);
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
 }
 
-// 8.2 OverviewPage ------------------------------------------------------------
+.explore-content {
+    background-color: var(--bg-1);
+    position: relative;
+    z-index: 10;
+}
+
 .overview-page {
     display: flex;
     flex-direction: column;
@@ -1650,7 +1855,7 @@ a>.rs-panel {
     position: relative;
     width: 100%;
 
-    img {
+    .overview-hero__img {
         width: 100%;
         height: 100vh;
         object-fit: cover;
@@ -1670,7 +1875,7 @@ a>.rs-panel {
         color: #fff;
         max-width: 600px;
 
-        h1 {
+        .overview-hero__title {
             font-size: clamp(28px, 4vw, var(--fs-hero));
             text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
             margin-bottom: var(--space-2);
@@ -1702,7 +1907,8 @@ a>.rs-panel {
             margin-bottom: var(--space-4);
         }
 
-        strong {
+        .overview-crew strong,
+        .overview-cast strong {
             font-weight: 600;
             color: rgba(255, 255, 255, 0.9);
         }
@@ -1717,12 +1923,30 @@ a>.rs-panel {
     }
 }
 
+.overview-text-clip {
+    position: relative;
+    overflow: hidden;
+    max-height: calc(var(--fs-md) * 1.5 * 5);
+
+    &.is-overflowing .overview-text {
+        animation: overviewTextScroll var(--overview-scroll-dur, 16s) ease-in-out infinite alternate;
+        animation-delay: 1s;
+    }
+}
+
+@keyframes overviewTextScroll {
+    0%, 12% {
+        transform: translateY(0);
+    }
+    88%, 100% {
+        transform: translateY(var(--overview-scroll, 0));
+    }
+}
+
 .overview-similar {
     padding: var(--space-8) var(--space-6);
 }
 
-
-// 8.3 WorkInProgressPage ------------------------------------------------------
 .wip-container {
     display: flex;
     flex-direction: column;
@@ -1749,8 +1973,6 @@ a>.rs-panel {
     color: var(--accent) !important;
 }
 
-
-// 8.4 PlayGamePage -------------------------------------------------------------
 .play-game-page {
     min-height: 100vh;
     background-color: #07070b;
@@ -1830,8 +2052,6 @@ a>.rs-panel {
     }
 }
 
-
-// 8.5 PlayPage ----------------------------------------------------------------
 .play-page {
     display: flex;
     flex-direction: column;
@@ -1948,8 +2168,6 @@ a>.rs-panel {
     }
 }
 
-
-// 8.6 ExplorePage / TVShowsPage ------------------------------------------------
 .explore-page,
 .tvshows-page {
     display: flex;
@@ -1962,9 +2180,7 @@ a>.rs-panel {
     flex: 1;
 }
 
-
-
-
+// 11. YardÄ±mcÄ± SÄ±nÄ±flar =======================================================
 .text-center {
     text-align: center;
 }
@@ -2003,12 +2219,12 @@ a>.rs-panel {
     border-top: 1px solid var(--border-subtle);
 }
 
-
-// 10. Scrollbar ===============================================================
-
+// 12. KaydÄ±rma Ã‡ubuÄŸu =========================================================
+// TarayÄ±cÄ±nÄ±n kendi (native) scrollbar'Ä± CSS ile boyanÄ±r; ekstra bileÅŸen gerekmez.
+// WebKit (Chrome/Edge/Safari) iÃ§in ::-webkit-scrollbar, Firefox iÃ§in scrollbar-*.
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -2016,33 +2232,38 @@ a>.rs-panel {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--bg-3);
-    border: 2px solid var(--bg-0);
-    border-radius: var(--radius-0);
+    background: var(--accent-active);
+    border: 3px solid var(--bg-0);
+    border-radius: var(--radius-pill);
     @include smooth(background-color);
 
     &:hover {
-        background: var(--border-strong);
+        background: var(--accent);
     }
+
+    &:active {
+        background: var(--accent-hover);
+    }
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--bg-0);
 }
 
 // Firefox
 * {
     scrollbar-width: thin;
-    scrollbar-color: var(--bg-3) var(--bg-0);
+    scrollbar-color: var(--accent-active) var(--bg-0);
 }
 
 
-// 11. Responsive Breakpoints ==================================================
-
-// ---- ≤1200px ----------------------------------------------------------------
+// 13. Responsive ==============================================================
 @media (max-width: 1200px) {
     .custom-header {
         padding: 0 var(--space-6) !important;
     }
 }
 
-// ---- ≤1024px : Tablet -------------------------------------------------------
 @media (max-width: 1024px) {
     :root {
         --fs-hero: 36px;
@@ -2063,22 +2284,23 @@ a>.rs-panel {
     }
 
     .hero-nav-btn {
-        width: 48px !important;
-        height: 48px !important;
+        width: 46px !important;
+        height: 46px !important;
 
-        svg { width: 28px; height: 28px; }
+        svg { width: 24px; height: 24px; }
     }
 
     .cc-carousel-wrapper .rs-carousel {
         height: 36vw !important;
     }
 
-    .cc-item img {
+    .cc-item .cc-item__poster {
         height: 36vw;
     }
 
+    .home-content,
     .explore-content {
-        padding: var(--space-6) 40px;
+        padding: var(--space-6) var(--space-8);
     }
 
     .overview-seasons-section {
@@ -2090,7 +2312,6 @@ a>.rs-panel {
     }
 }
 
-// ---- ≤768px : Tablet küçük / mobil yatay ------------------------------------
 @media (max-width: 768px) {
     :root {
         --fs-hero: 24px;
@@ -2099,7 +2320,6 @@ a>.rs-panel {
         --fs-xl: 18px;
     }
 
-    // --- Header ---
     .header-main-nav {
         display: none !important;
     }
@@ -2123,15 +2343,14 @@ a>.rs-panel {
         height: 60px !important;
     }
 
-    // --- Hero ---
     .hero-carousel-inner {
         height: 52vh !important;
         height: 52dvh !important;
     }
 
     .hero-nav-btn {
-        width: 40px !important;
-        height: 40px !important;
+        width: 42px !important;
+        height: 42px !important;
 
         svg { width: 22px; height: 22px; }
 
@@ -2155,12 +2374,11 @@ a>.rs-panel {
         font-size: var(--fs-sm) !important;
     }
 
-    // --- ContentCarousel ---
     .cc-carousel-wrapper .rs-carousel {
         height: 48vw !important;
     }
 
-    .cc-item img {
+    .cc-item .cc-item__poster {
         height: 48vw;
     }
 
@@ -2168,7 +2386,6 @@ a>.rs-panel {
         margin-bottom: var(--space-6);
     }
 
-    // --- GameCarousel ---
     .gc-card {
         width: 130px !important;
         height: 130px !important;
@@ -2178,20 +2395,37 @@ a>.rs-panel {
         gap: var(--space-3);
     }
 
-    // --- Pages ---
-    .home-content {
-        padding: var(--space-5) var(--space-4);
-        gap: var(--space-6);
-    }
-
+    .home-content,
     .explore-content {
-        padding: var(--space-4);
+        padding: var(--space-6) var(--space-5);
         gap: var(--space-6);
     }
 
-    // --- Overview ---
+    .overview-text-clip {
+        max-height: none;
+        overflow: visible;
+    }
+
+    .site-footer {
+        .site-footer__inner {
+            padding: var(--space-8) var(--space-5) var(--space-5);
+        }
+
+        .site-footer__top {
+            gap: var(--space-8);
+        }
+
+        .site-footer__cols {
+            gap: var(--space-8) var(--space-10);
+        }
+
+        .site-footer__brand {
+            max-width: none;
+        }
+    }
+
     .overview-hero {
-        img {
+        .overview-hero__img {
             height: 50vh;
         }
 
@@ -2242,7 +2476,6 @@ a>.rs-panel {
         padding: var(--space-5) var(--space-4);
     }
 
-    // --- Episode cards ---
     .episode-card {
         flex-direction: column;
 
@@ -2257,7 +2490,6 @@ a>.rs-panel {
         }
     }
 
-    // --- PlayGamePage ---
     .play-game-page .pg-header {
         padding: var(--space-3) var(--space-4);
         flex-wrap: wrap;
@@ -2272,13 +2504,11 @@ a>.rs-panel {
         padding: calc(60px + var(--space-6)) var(--space-4) var(--space-6);
     }
 
-    // --- Buttons ---
     .btn-play {
         font-size: 15px !important;
         padding: 10px 28px !important;
     }
 
-    // --- ContentCarousel item overlay ---
     .cc-item__name {
         font-size: 15px !important;
     }
@@ -2292,18 +2522,10 @@ a>.rs-panel {
         height: 36px;
     }
 
-    // cc-nav-arrow width for non-touch mobile (e.g. foldable with stylus)
-    // Touch devices get display:none via @media (hover: none) above.
     .cc-carousel-wrapper .cc-nav-arrow {
         width: 40px;
     }
 
-    // --- Search overlay ---
-    // Base .centered-search uses left:50% + translate(-50%,-50%).
-    // On mobile we anchor to the right edge (where the search icon lives)
-    // and kill the transform so the animejs width expansion is right-anchored
-    // and doesn't bleed off-screen. Do NOT set width with !important —
-    // animejs drives width via inline style which !important would block.
     .animated-search-container.centered-search {
         position: fixed !important;
         top: 8px !important;
@@ -2315,7 +2537,6 @@ a>.rs-panel {
     }
 }
 
-// ---- ≤480px : Mobil dikey ---------------------------------------------------
 @media (max-width: 480px) {
     :root {
         --fs-hero: 20px;
@@ -2323,7 +2544,6 @@ a>.rs-panel {
         --fs-xl: 16px;
     }
 
-    // --- Header ---
     .custom-header {
         height: 56px !important;
     }
@@ -2332,7 +2552,6 @@ a>.rs-panel {
         font-size: 22px !important;
     }
 
-    // --- Hero ---
     .hero-carousel-inner {
         height: 48vh !important;
         height: 48dvh !important;
@@ -2355,28 +2574,22 @@ a>.rs-panel {
         display: none !important;
     }
 
-    // Hero nav arrows: hidden on very small screens.
-    // Specificity must match the base .hero-carousel-wrapper .hero-nav-btn rule
-    // which uses display:flex !important — so we need the same compound selector + !important.
     .hero-carousel-wrapper .hero-nav-btn {
         display: none !important;
     }
 
-    // Content carousel nav arrows: hidden on very small screens.
     .cc-carousel-wrapper .cc-nav-arrow {
         display: none;
     }
 
-    // --- ContentCarousel ---
     .cc-carousel-wrapper .rs-carousel {
         height: 68vw !important;
     }
 
-    .cc-item img {
+    .cc-item .cc-item__poster {
         height: 68vw;
     }
 
-    // --- GameCarousel ---
     .gc-card {
         width: 115px !important;
         height: 115px !important;
@@ -2387,9 +2600,40 @@ a>.rs-panel {
         padding-bottom: var(--space-3);
     }
 
-    // --- Overview ---
+    .home-content,
+    .explore-content {
+        padding: var(--space-5) var(--space-4);
+        gap: var(--space-5);
+    }
+
+    .site-footer {
+        .site-footer__inner {
+            padding: var(--space-6) var(--space-4) var(--space-4);
+        }
+
+        .site-footer__top {
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .site-footer__cols {
+            gap: var(--space-6);
+        }
+
+        .site-footer__col {
+            min-width: 40%;
+            flex: 1 1 40%;
+        }
+
+        .site-footer__bottom {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--space-2);
+        }
+    }
+
     .overview-hero {
-        img {
+        .overview-hero__img {
             height: 40vh;
         }
 
@@ -2400,7 +2644,7 @@ a>.rs-panel {
         .overview-hero__info {
             padding: var(--space-4) var(--space-3) var(--space-5);
 
-            h1 { font-size: 20px; }
+            .overview-hero__title { font-size: 20px; }
 
             .overview-text,
             .overview-crew,
@@ -2410,13 +2654,11 @@ a>.rs-panel {
         }
     }
 
-    // --- Buttons ---
     .btn-play {
         font-size: 14px !important;
         padding: 9px 22px !important;
     }
 
-    // --- ContentCarousel item overlay ---
     .cc-item__name {
         font-size: 12px !important;
         letter-spacing: 0;
@@ -2432,7 +2674,6 @@ a>.rs-panel {
         height: 24px;
     }
 
-    // Overview too small to read on 480px, hide to reduce visual noise
     .cc-item__overview-container {
         display: none;
     }
@@ -2451,7 +2692,6 @@ a>.rs-panel {
         padding: 7px 14px !important;
     }
 
-    // --- PlayGamePage ---
     .play-game-page .pg-score-card {
         font-size: 12px;
         padding: 5px 12px;
@@ -2462,7 +2702,6 @@ a>.rs-panel {
         padding: 6px 12px !important;
     }
 
-    // --- Mobile nav panel ---
     .mobile-nav-panel {
         width: 100%;
         border-left: none;
@@ -2473,27 +2712,6 @@ a>.rs-panel {
     }
 }
 
-// ---- LoginPage responsive ---------------------------------------------------
-@media (max-width: 900px) {
-    .login-left  { width: 45%; }
-    .login-right { width: 55%; padding: calc(72px + var(--space-4)) var(--space-5) var(--space-5); }
-}
-
-@media (max-width: $bp-md) {
-    .login-left  { display: none; }
-
-    .login-right {
-        width: 100%;
-        padding: calc(60px + var(--space-6)) var(--space-5) var(--space-6);
-        justify-content: flex-start;
-        background: rgba(7, 7, 11, 0.78);
-        border-left: none;
-    }
-
-    .login-card { max-width: 100%; }
-}
-
-// ---- PackagesPage responsive ------------------------------------------------
 @media (max-width: $bp-lg) {
     .packages-main {
         padding: calc(72px + var(--space-8)) var(--space-6) var(--space-10);
@@ -2519,7 +2737,6 @@ a>.rs-panel {
     }
 }
 
-// 12. TV Season & Episode Selector --------------------------------------------
 .overview-seasons-section {
     padding: var(--space-8) 60px;
     background-color: var(--bg-1);
@@ -2586,7 +2803,7 @@ a>.rs-panel {
         }
 
         &::after {
-            content: '▾';
+            content: 'â–¾';
             position: absolute;
             right: 14px;
             top: 50%;
@@ -2732,19 +2949,8 @@ a>.rs-panel {
     }
 }
 
-
 .explore-main {
     position: relative;
-}
-
-.explore-content {
-    padding: var(--space-8) 60px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-8);
-    background-color: var(--bg-1);
-    position: relative;
-    z-index: 10;
 }
 
 .cc-item__actions-row {
@@ -2816,7 +3022,7 @@ a>.rs-panel {
     display: inline-block;
 }
 
-
+// 14. Login SayfasÄ± ===========================================================
 .login-page {
     position: relative;
     display: flex;
@@ -2837,55 +3043,46 @@ a>.rs-panel {
     transition: opacity 1.2s ease-in-out;
     user-select: none;
     pointer-events: none;
-
-    &.active { opacity: 1; z-index: 1; }
 }
 
-.login-bg-overlay {
+.login-bg--active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.login-bg__overlay {
     position: fixed;
     inset: 0;
     z-index: 2;
-    background: rgba(7, 7, 11, 0.36);
     pointer-events: none;
+    background: rgba(7, 7, 11, 0.18);
 }
 
-.login-panels {
+.login-body {
     position: relative;
     z-index: 3;
     display: flex;
     flex: 1;
-    min-height: calc(100vh - 60px); // 60px ≈ footer height
+    align-items: stretch;
+    min-height: calc(100vh - 60px);
 }
 
-.login-left {
-    width: 60%;
+.login-intro {
+    flex: 1 1 55%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: var(--space-12) var(--space-10);
+    padding: clamp(24px, 5vw, 64px);
     position: relative;
-
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background:
-            linear-gradient(to right, rgba(7, 7, 11, 0.15) 0%, transparent 55%),
-            linear-gradient(to top,
-                rgba(7, 7, 11, 0.90) 0%,
-                rgba(7, 7, 11, 0.35) 38%,
-                transparent 65%);
-    }
 }
 
-.login-left__info {
+.login-intro__inner {
     position: relative;
     color: #fff;
-    max-width: 520px;
+    max-width: 540px;
 }
 
-.login-left__badge {
+.login-intro__badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -2901,58 +3098,63 @@ a>.rs-panel {
     margin-bottom: var(--space-3);
 }
 
-.login-left__info h2 {
-    font-size: clamp(24px, 2.8vw, 40px);
+.login-intro__title {
+    font-size: clamp(28px, 3.4vw, 46px);
     font-weight: 800;
-    line-height: 1.15;
-    margin-bottom: var(--space-3);
-    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.65);
-    color: #fff;
+    line-height: 1.12;
+    margin: 0 0 var(--space-3);
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.7);
 }
 
-.login-left__info p {
+.login-intro__desc {
     font-size: var(--fs-sm);
-    color: rgba(255, 255, 255, 0.78);
+    color: rgba(255, 255, 255, 0.8);
     line-height: 1.65;
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
     margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 6;
-    line-clamp: 6;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.login-right {
-    width: 40%;
+.login-formwrap {
+    flex: 0 0 clamp(380px, 40%, 540px);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: calc(72px + var(--space-6)) var(--space-8) var(--space-8);
-    overflow-y: auto;
-    background: rgba(7, 7, 11, 0.38);
-    backdrop-filter: blur(32px) saturate(1.4);
-    -webkit-backdrop-filter: blur(32px) saturate(1.4);
-    border-left: 1px solid rgba(255, 255, 255, 0.07);
+    padding: clamp(72px, 10vh, 120px) clamp(28px, 4vw, 64px) var(--space-8);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(to right,
+        rgba(7, 7, 11, 0.05) 0%,
+        rgba(7, 7, 11, 0.32) 42%,
+        rgba(7, 7, 11, 0.46) 100%);
 }
 
 .login-card {
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
+    background: transparent;
 }
 
-.login-heading {
+.login-card__head {
+    margin-bottom: var(--space-6);
+}
+
+.login-card__title {
     font-size: var(--fs-3xl);
     font-weight: 800;
-    color: var(--text-primary);
-    margin-bottom: var(--space-2);
+    color: #ffffff;
+    margin: 0 0 var(--space-2);
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
 }
 
-.login-subheading {
+.login-card__subtitle {
     font-size: var(--fs-sm);
-    color: var(--text-secondary);
-    margin: 0 0 var(--space-6);
+    color: rgba(255, 255, 255, 0.82);
+    margin: 0;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
 .login-form {
@@ -2961,143 +3163,171 @@ a>.rs-panel {
     gap: var(--space-4);
 }
 
-.login-label {
-    display: block;
+.login-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-field__label {
     font-size: var(--fs-xs);
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.82);
     letter-spacing: 0.07em;
     text-transform: uppercase;
     margin-bottom: 6px;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 
-.login-page {
-    .rs-input {
-        background-color: rgba(255, 255, 255, 0.96) !important;
-        color: #111111 !important;
-        border-color: rgba(255, 255, 255, 0.8) !important;
-        padding: 14px 16px !important;
-        font-size: var(--fs-md) !important;
-        height: auto !important;
-        border-radius: var(--radius-1) !important;
+.login-field__control {
+    position: relative;
+}
 
-        &::placeholder {
-            color: rgba(0, 0, 0, 0.35) !important;
-        }
+.login-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    font-size: var(--fs-md);
+    font-family: inherit;
+    color: #14141d;
+    background: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: var(--radius-1);
+    outline: none;
+    @include smooth(border-color box-shadow background-color, var(--dur-fast));
 
-        &:hover {
-            border-color: rgba(255, 255, 255, 1) !important;
-            background-color: #ffffff !important;
-        }
-
-        &:focus {
-            border-color: var(--accent) !important;
-            background-color: #ffffff !important;
-            box-shadow: 0 0 0 1px var(--accent-soft) !important;
-        }
+    &::placeholder {
+        color: rgba(0, 0, 0, 0.38);
     }
-}
 
-.login-input-error {
-    border-color: var(--danger) !important;
-    background-color: rgba(255, 230, 230, 0.96) !important;
+    &:hover {
+        border-color: #ffffff;
+    }
 
     &:focus {
-        border-color: var(--danger) !important;
-        box-shadow: 0 0 0 1px rgba(255, 77, 79, 0.28) !important;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
     }
 }
 
-.login-field-err {
+.login-input--padded {
+    padding-right: 46px;
+}
+
+.login-input--error {
+    background: #fff1f1;
+    border-color: var(--danger);
+
+    &:focus {
+        border-color: var(--danger);
+        box-shadow: 0 0 0 3px rgba(255, 77, 79, 0.22);
+    }
+}
+
+.login-pw-toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: rgba(0, 0, 0, 0.42);
+    cursor: pointer;
     display: flex;
+    padding: 6px;
+    border-radius: var(--radius-1);
+    @include smooth(color background-color, var(--dur-fast));
+
+    &:hover {
+        color: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.05);
+    }
+}
+
+.login-field__error {
+    display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-top: 5px;
+    margin-top: 6px;
     font-size: var(--fs-xs);
-    color: #ff9090;
+    color: #ff9a9a;
     font-weight: 500;
-}
-
-.login-input-wrap {
-    position: relative;
-
-    .rs-input { padding-right: 44px !important; }
-
-    .login-pw-toggle {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: transparent;
-        border: none;
-        color: rgba(0, 0, 0, 0.4);
-        cursor: pointer;
-        display: flex;
-        padding: 4px;
-        z-index: 1;
-        @include smooth(color);
-
-        &:hover { color: rgba(0, 0, 0, 0.65); }
-    }
 }
 
 .login-actions {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    margin-top: var(--space-5);
+    margin-top: var(--space-3);
 }
 
-.login-submit-btn {
-    height: 50px !important;
-    font-size: var(--fs-md) !important;
-    font-weight: 700 !important;
-    background-color: var(--accent) !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: var(--radius-1) !important;
-    letter-spacing: 0.02em !important;
-    @include smooth(background-color box-shadow transform, var(--dur-fast));
+.login-btn {
+    height: 50px;
+    width: 100%;
+    font-size: var(--fs-md);
+    font-weight: 700;
+    font-family: inherit;
+    border-radius: var(--radius-1);
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    @include smooth(background-color border-color color box-shadow transform, var(--dur-fast));
+}
+
+.login-btn--primary {
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
 
     &:hover {
-        background-color: var(--accent-hover) !important;
-        transform: translateY(-1px) !important;
-        box-shadow: 0 6px 20px rgba(255, 106, 0, 0.35) !important;
+        background: var(--accent-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 106, 0, 0.4);
     }
 
-    &:active { transform: translateY(0) !important; }
-}
-
-.login-register-btn {
-    height: 50px !important;
-    font-size: var(--fs-md) !important;
-    font-weight: 600 !important;
-    color: rgba(255, 255, 255, 0.9) !important;
-    background: transparent !important;
-    border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
-    border-radius: var(--radius-1) !important;
-    letter-spacing: 0.01em !important;
-    @include smooth(background-color border-color color, var(--dur-fast));
-
-    &:hover {
-        background: rgba(255, 255, 255, 0.08) !important;
-        border-color: rgba(255, 255, 255, 0.45) !important;
-        color: #ffffff !important;
+    &:active {
+        transform: translateY(0);
     }
 }
 
-.login-page > .rs-footer {
+.login-btn--ghost {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.45);
+        color: #ffffff;
+    }
+}
+
+.login-page > .site-footer {
     position: relative;
     z-index: 3;
-    background: rgba(7, 7, 11, 0.85);
+    background: rgba(7, 7, 11, 0.7);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+// Login responsive (base kurallardan SONRA gelmeli ki override calissin)
+@media (max-width: 900px) {
+    .login-intro { flex-basis: 42%; }
+    .login-formwrap { flex-basis: clamp(340px, 52%, 460px); }
+}
 
-// 8.8 PackagesPage -------------------------------------------------------------
+@media (max-width: $bp-md) {
+    .login-intro { display: none; }
 
+    .login-formwrap {
+        flex: 1;
+        align-items: flex-start;
+        padding: calc(60px + var(--space-6)) var(--space-5) var(--space-6);
+    }
+
+    .login-card { max-width: 100%; }
+}
+
+// 15. Paketler SayfasÄ± ========================================================
 .packages-page {
     display: flex;
     flex-direction: column;
@@ -3274,8 +3504,7 @@ a>.rs-panel {
     }
 }
 
-
-// 8.6 SearchPage --------------------------------------------------------------
+// 16. Arama SayfasÄ± ===========================================================
 .search-page {
     display: flex;
     flex-direction: column;
@@ -3335,8 +3564,6 @@ a>.rs-panel {
     }
 }
 
-
-// 7.8 MediaCard ---------------------------------------------------------------
 .media-card {
     display: flex;
     flex-direction: column;
@@ -3408,8 +3635,6 @@ a>.rs-panel {
     }
 }
 
-
-// 7.9 StateView (empty / error / no-results) ----------------------------------
 .state-view {
     display: flex;
     flex-direction: column;
@@ -3445,8 +3670,6 @@ a>.rs-panel {
     }
 }
 
-
-// 7.10 ErrorBoundary fallback -------------------------------------------------
 .app-error-boundary {
     display: flex;
     flex-direction: column;
@@ -3472,3 +3695,636 @@ a>.rs-panel {
     }
 }
 
+// 17. Player SayfasÄ± ===========================================================
+.player-container {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: var(--z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.player-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.player-gradient-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 160px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.player-gradient-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 240px;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.player-loading,
+.player-error {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    z-index: 5;
+    color: var(--text-primary);
+
+    p { font-size: var(--fs-lg); color: var(--text-secondary); margin: 0; }
+
+    button {
+        margin-top: var(--space-2);
+        padding: var(--space-3) var(--space-6);
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-pill);
+        font-size: var(--fs-base);
+        font-weight: 600;
+        cursor: pointer;
+        @include smooth(background);
+        &:hover { background: var(--accent-hover); }
+    }
+}
+
+.player-loading__spinner {
+    width: 52px;
+    height: 52px;
+    border: 3px solid rgba(255,255,255,0.15);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.player-controls {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    transition: opacity 300ms var(--ease);
+    pointer-events: none;
+
+    &.visible {
+        opacity: 1;
+    }
+
+    &__top {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-5) var(--space-6);
+        pointer-events: none;
+
+        > * { pointer-events: auto; }
+    }
+
+    &__title {
+        flex: 1;
+        font-size: var(--fs-lg);
+        font-weight: 700;
+        color: var(--text-primary);
+        text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        @include truncate;
+    }
+
+    &__bottom {
+        padding: 0 var(--space-6) var(--space-6);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        pointer-events: none;
+
+        > * { pointer-events: auto; }
+    }
+
+    &__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__left,
+    &__right {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+}
+
+.player-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    border-radius: 50%;
+    flex-shrink: 0;
+    @include smooth(background, color);
+
+    &:hover {
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+    }
+
+    &--back {
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(8px);
+        color: #fff;
+
+        &:hover { background: rgba(255,255,255,0.2); }
+    }
+
+    &--play {
+        width: 52px;
+        height: 52px;
+        background: var(--accent);
+        color: #fff;
+
+        &:hover { background: var(--accent-hover); transform: scale(1.05); }
+    }
+}
+
+.player-quality-badge {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 3px 10px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.player-settings-wrap {
+    position: relative;
+}
+
+.player-settings-menu {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 0;
+    background: rgba(13,13,20,0.96);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    padding: var(--space-2);
+    min-width: 210px;
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.6);
+    backdrop-filter: blur(16px);
+
+    &__label {
+        font-size: var(--fs-xs);
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: var(--space-1) var(--space-2) var(--space-2);
+        margin: 0;
+    }
+
+    &__item {
+        display: block;
+        width: 100%;
+        padding: var(--space-2) var(--space-3);
+        text-align: left;
+        border: none;
+        background: transparent;
+        color: var(--text-secondary);
+        font-size: var(--fs-sm);
+        border-radius: 6px;
+        cursor: pointer;
+        @include smooth(background, color);
+
+        &:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        &.active { color: var(--accent); font-weight: 600; }
+    }
+}
+
+.player-progress-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.player-progress-track {
+    position: relative;
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: rgba(255,255,255,0.18);
+    cursor: pointer;
+
+    &:hover {
+        height: 6px;
+        .player-progress-played { background: var(--accent-hover); }
+    }
+    @include smooth(height);
+}
+
+.player-progress-buffered {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: rgba(255,255,255,0.3);
+    border-radius: var(--radius-pill);
+    pointer-events: none;
+    @include smooth(width, 200ms);
+}
+
+.player-progress-played {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--accent);
+    border-radius: var(--radius-pill);
+    pointer-events: none;
+}
+
+.player-progress-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft), 0 1px 4px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    z-index: 2;
+    @include smooth(transform, var(--dur-fast));
+}
+
+.player-progress-track:hover .player-progress-thumb {
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+.player-progress-input {
+    position: absolute;
+    inset: -8px 0;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+}
+
+.player-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--fs-xs);
+    color: rgba(255,255,255,0.65);
+    font-variant-numeric: tabular-nums;
+    padding: 0 2px;
+}
+
+// Ses kontrol â€” her zaman gÃ¶rÃ¼nÃ¼r bar
+.player-volume {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.player-volume-bar-wrap {
+    position: relative;
+    width: 80px;
+    height: 4px;
+    background: rgba(255,255,255,0.2);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    flex-shrink: 0;
+
+    &:hover {
+        height: 6px;
+        .player-volume-bar-fill { background: var(--accent-hover); }
+    }
+    @include smooth(height);
+}
+
+.player-volume-bar-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: var(--accent);
+    border-radius: var(--radius-pill);
+    pointer-events: none;
+}
+
+.player-volume-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.player-volume-input {
+    position: absolute;
+    inset: -8px 0;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+}
+
+.player-volume-pct {
+    font-size: var(--fs-xs);
+    color: rgba(255,255,255,0.6);
+    min-width: 30px;
+    font-variant-numeric: tabular-nums;
+}
+
+// 18. TV İzle Sayfası ==========================================================
+.tv-page {
+    background: var(--bg-0);
+}
+
+.tv-main {
+    padding: calc(72px + var(--space-8)) var(--space-6) var(--space-6);
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.tv-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-6);
+    height: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    @include bp($bp-lg) {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+}
+
+// Sol: kanal listesi
+.tv-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    overflow: hidden;
+
+    &__title {
+        font-size: var(--fs-md);
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        flex-shrink: 0;
+    }
+}
+
+.tv-channel-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding-right: var(--space-1);
+
+    &::-webkit-scrollbar { width: 3px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 2px; }
+}
+
+.tv-channel-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-3);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-1);
+    border-radius: 2px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    @include smooth(background, border-color);
+
+    &:hover {
+        background: var(--bg-2);
+        border-color: var(--border-default);
+    }
+
+    &.active {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+
+        .tv-channel-item__name { color: var(--accent); }
+    }
+
+    &__logo {
+        width: 40px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: var(--bg-3);
+        border-radius: 5px;
+        overflow: hidden;
+        padding: 3px;
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        svg { color: var(--text-muted); }
+    }
+
+    &__name {
+        flex: 1;
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @include smooth(color);
+    }
+
+    &__live {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--danger);
+        flex-shrink: 0;
+        animation: livePulse 1.5s ease-in-out infinite;
+    }
+}
+
+// Sağ: player
+.tv-featured {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 16px;
+    min-height: 0;
+
+    &__player {
+        flex: 1;
+        position: relative;
+        background: #000;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border-subtle);
+        min-height: 0;
+
+        &.player-container {
+            position: relative;
+            inset: auto;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+
+            &:fullscreen {
+                border: none;
+                border-radius: 0;
+            }
+        }
+    }
+
+
+    &__video {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    &__live-badge {
+        position: absolute;
+        top: var(--space-4);
+        right: var(--space-4);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-pill);
+        background: var(--danger);
+        color: #fff;
+        font-size: var(--fs-xs);
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        z-index: 2;
+    }
+
+    &__channel-name {
+        position: absolute;
+        bottom: var(--space-4);
+        left: var(--space-4);
+        font-size: var(--fs-sm);
+        font-weight: 600;
+        color: rgba(255,255,255,0.7);
+        z-index: 2;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+}
+
+.tv-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: livePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+// Video oynat/duraklat tıklama katmanı
+.player-click-zone {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    cursor: pointer;
+}
+
+// Ortada beliren play/pause ikonu (tıklayınca)
+.player-center-action {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    z-index: 6;
+    pointer-events: none;
+    animation: playerCenterPop 600ms var(--ease) forwards;
+}
+
+@keyframes playerCenterPop {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    28%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+}
+
+// Canlı rozeti (MediaPlayer)
+.player-live-badge {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 4px var(--space-3);
+    border-radius: var(--radius-pill);
+    background: var(--danger);
+    color: #fff;
+    font-size: var(--fs-xs);
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    z-index: 4;
+    pointer-events: none;
+}
+
+.player-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: livePulse 1.5s ease-in-out infinite;
+}

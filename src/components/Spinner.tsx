@@ -1,7 +1,21 @@
-export default function Spinner() {
+import Logo from './Logo'
+
+interface SpinnerProps {
+  // icerik-ici
+  inline?: boolean
+}
+
+// yukleme animasyonu
+export default function Spinner({ inline = false }: SpinnerProps) {
   return (
-    <div className="spinner-overlay">
-      <div className="spinner-ring" />
+    <div className={`spinner-overlay${inline ? ' spinner-overlay--inline' : ''}`}>
+      <div className="spinner-stage">
+        <span className="spinner-pulse" />
+        <span className="spinner-pulse" />
+        <span className="spinner-pulse" />
+        <span className="spinner-core" />
+      </div>
+      <Logo className="spinner-logo" />
       <span className="spinner-label">Yükleniyor</span>
     </div>
   )

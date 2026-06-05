@@ -3,10 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from 'rsuite'
 import { Check, Zap, Crown, Play } from 'lucide-react'
 import { animate } from 'animejs'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import type { PackageDef } from '../types/types'
-
 
 const PACKAGES: PackageDef[] = [
   {
@@ -65,7 +62,6 @@ const PACKAGES: PackageDef[] = [
   },
 ]
 
-
 export default function PackagesPage() {
   const navigate = useNavigate()
   const heroRef  = useRef<HTMLDivElement>(null)
@@ -94,7 +90,6 @@ export default function PackagesPage() {
 
   return (
     <div className="packages-page">
-      <Header />
       <main className="packages-main">
 
         <div className="packages-hero" ref={heroRef} style={{ opacity: 0 }}>
@@ -144,7 +139,6 @@ export default function PackagesPage() {
         </div>
 
       </main>
-      <Footer />
     </div>
   )
 }

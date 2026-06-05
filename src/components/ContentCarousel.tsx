@@ -1,7 +1,7 @@
 import { memo, useRef, useState, useMemo, useEffect } from 'react'
 import { Carousel } from 'rsuite'
-import { Link } from 'react-router-dom'
-import { animate } from 'animejs'
+import { Link, useNavigate } from 'react-router-dom'
+import { animate, stagger } from 'animejs'
 import { ChevronLeft, ChevronRight, Play, Plus, ThumbsUp, ChevronDown } from 'lucide-react'
 import { getImageUrl } from '../services/tmdb'
 import { useVisibleCount } from '../hooks/useVisibleCount'
@@ -21,6 +21,21 @@ const ItemCard = memo(function ItemCard({ item, type }: { item: Movie | TVShow; 
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const expanded = useRef(false)
   const [showTitle, setShowTitle] = useState(false)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!showTitle) return
+    const buttons = ref.current?.querySelectorAll('.cc-item__action-btn')
+    if (!buttons || buttons.length === 0) return
+    animate(buttons, {
+      opacity: [0, 1],
+      scale: [0.5, 1],
+      translateY: [8, 0],
+      duration: 420,
+      delay: stagger(60),
+      ease: 'outBack',
+    })
+  }, [showTitle])
 
   const name = (item as Movie).title ?? (item as TVShow).name
   const year = ((item as Movie).release_date || (item as TVShow).first_air_date)?.slice(0, 4) ?? ''
@@ -56,8 +71,9 @@ const ItemCard = memo(function ItemCard({ item, type }: { item: Movie | TVShow; 
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
-      <Link to={`/${type}/${item.id}`}>
+      <Link className="cc-item__link" to={`/${type}/${item.id}`}>
         <img
+          className="cc-item__poster"
           src={getImageUrl(item.poster_path, 'w300')}
           alt={name}
           loading="lazy"
@@ -67,7 +83,7 @@ const ItemCard = memo(function ItemCard({ item, type }: { item: Movie | TVShow; 
         <div className="cc-item__details">
           <div className="cc-item__actions-row">
             <div className="cc-item__actions-left">
-              <button className="cc-item__action-btn play" type="button">
+              <button className="cc-item__action-btn play" type="button" onClick={() => navigate(`/${type}/${item.id}`)}>
                 <Play size={12} fill="currentColor" />
               </button>
               <button className="cc-item__action-btn outline" type="button">
@@ -132,7 +148,7 @@ export default function ContentCarousel({ type, title, items }: ContentCarouselP
     <div className="content-carousel">
       <div className="cc-header">
         <div className="cc-header__left">
-          <h3>{title}</h3>
+          <h3 className="cc-header__title">{title}</h3>
         </div>
         {slides.length > 1 && (
           <div className="cc-header__indicators">

@@ -10,9 +10,9 @@ export default function WorkInProgressPage() {
       <h1 className="wip-title">
         Work in Progress
       </h1>
-      <Button 
-        className="btn-play" 
-        size="lg" 
+      <Button
+        className="btn-play"
+        size="lg"
         onClick={() => navigate(-1)}
       >
         <ArrowLeft size={18} className="wip-icon" />

@@ -37,7 +37,7 @@ export default function SearchPage() {
         />
       )
     }
-    if (loading) return <Spinner />
+    if (loading) return <Spinner inline />
     if (error) {
       return (
         <StateView

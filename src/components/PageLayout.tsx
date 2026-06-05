@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react'
-import Header from './Header'
-import Footer from './Footer'
 import Spinner from './Spinner'
 
 interface PageLayoutProps {
@@ -10,6 +8,7 @@ interface PageLayoutProps {
   loading?: boolean
 }
 
+// sayfa sarmalayici
 export default function PageLayout({
   children,
   mainClassName,
@@ -18,10 +17,9 @@ export default function PageLayout({
 }: PageLayoutProps) {
   return (
     <div className={className}>
-      {loading && <Spinner />}
-      <Header />
-      <main className={mainClassName}>{children}</main>
-      <Footer />
+      {loading
+        ? <Spinner inline />
+        : <main className={mainClassName}>{children}</main>}
     </div>
   )
 }

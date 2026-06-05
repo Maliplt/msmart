@@ -106,7 +106,6 @@ export interface TVSeasonDetail {
     episodes: Episode[]
 }
 
-//packages
 export interface PackageDef {
     id: string
     name: string

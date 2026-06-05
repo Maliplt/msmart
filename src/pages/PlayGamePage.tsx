@@ -72,7 +72,7 @@ export default function PlayGamePage() {
                 </div>
             </header>
             <main className="pg-main-content">
-                <Suspense fallback={<Spinner />}>
+                <Suspense fallback={<Spinner inline />}>
                     {gameId === 'sudoku' ? (
                         <SudokuApp />
                     ) : gameId === 'minesweeper' ? (

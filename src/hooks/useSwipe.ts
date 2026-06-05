@@ -2,7 +2,6 @@ import { useRef } from 'react'
 
 const SWIPE_THRESHOLD = 50
 
-/** kaydırma hareketi kontrolü */
 export function useSwipe(onLeft: () => void, onRight: () => void) {
   const startX = useRef<number | null>(null)
 

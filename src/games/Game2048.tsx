@@ -30,7 +30,6 @@ const STYLES = `
 
 .g2-content { position: relative; z-index: 1; width: 100%; max-width: 480px; display: flex; flex-direction: column; align-items: center; }
 
-/* HEADER */
 .g2-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .g2-title {
   font-family: 'Baloo 2', cursive; font-size: 52px; font-weight: 800;
@@ -56,7 +55,6 @@ const STYLES = `
 }
 @keyframes scoreFloat { 0%{opacity:0;transform:translateY(8px)} 25%{opacity:1} 100%{opacity:0;transform:translateY(-18px)} }
 
-/* COMBO BAR */
 .combo-strip { width: 100%; height: 30px; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
 .combo-label {
   font-family: 'Baloo 2', cursive; font-size: 14px; font-weight: 700; white-space: nowrap;
@@ -65,7 +63,6 @@ const STYLES = `
 .combo-track { flex: 1; height: 8px; background: #ece4f7; border-radius: 5px; overflow: hidden; }
 .combo-fill { height: 100%; border-radius: 5px; transition: width 0.4s cubic-bezier(0.34,1.4,0.64,1), background 0.3s; }
 
-/* CONTROLS */
 .g2-controls { width: 100%; display: flex; gap: 9px; margin-bottom: 16px; }
 .g2-btn {
   font-family: 'Baloo 2', cursive; font-size: 13.5px; font-weight: 700; padding: 10px 0; border: none;
@@ -79,7 +76,6 @@ const STYLES = `
 .g2-btn:active:not(:disabled) { transform: scale(0.95); }
 .g2-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* BOARD */
 .board-shell {
   position: relative; background: #e4d9f6; border-radius: 22px; padding: ${GAP}%;
   box-shadow: 0 12px 32px rgba(139,111,208,0.22), inset 0 2px 8px rgba(255,255,255,0.7);
@@ -109,7 +105,6 @@ const STYLES = `
 @keyframes tileSpawn { 0%{transform:scale(0);opacity:0.4} 65%{transform:scale(1.14)} 100%{transform:scale(1)} }
 @keyframes tileMerge { 0%{transform:scale(1)} 38%{transform:scale(1.24)} 68%{transform:scale(0.93)} 100%{transform:scale(1)} }
 
-/* RIPPLE on wall hit */
 .ripple {
   position: absolute; border-radius: 50%; pointer-events: none;
   background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(168,142,230,0.35) 55%, transparent 72%);
@@ -117,11 +112,9 @@ const STYLES = `
 }
 @keyframes rippleOut { 0%{transform:scale(0.3);opacity:0.85} 100%{transform:scale(2.6);opacity:0} }
 
-/* SPARKLES */
 .sparkle { position: absolute; pointer-events: none; animation: sparkleFly 0.7s ease-out forwards; }
 @keyframes sparkleFly { 0%{transform:translate(0,0) scale(0.4) rotate(0);opacity:1} 100%{transform:translate(var(--sx),var(--sy)) scale(1.1) rotate(140deg);opacity:0} }
 
-/* FLOATING POINTS */
 .float-pts {
   position: absolute; pointer-events: none; font-family: 'Baloo 2', cursive; font-weight: 800;
   font-size: clamp(14px,4vw,20px); color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.25);
@@ -129,7 +122,6 @@ const STYLES = `
 }
 @keyframes floatUp { 0%{transform:translate(-50%,-50%) scale(0.6);opacity:0} 25%{opacity:1;transform:translate(-50%,-60%) scale(1.05)} 100%{transform:translate(-50%,-130%) scale(1);opacity:0} }
 
-/* OVERLAY */
 .g2-overlay {
   position: absolute; inset: ${GAP}%; display: flex; flex-direction: column; align-items: center; justify-content: center;
   border-radius: 16px; z-index: 20; animation: overlayFade 0.45s ease; backdrop-filter: blur(3px);
@@ -150,7 +142,6 @@ const STYLES = `
 .overlay-btn.ghost { background: rgba(255,255,255,0.8); color: #8b6fd0; border: 1.5px solid #d8c8f0; }
 .overlay-btn:active { transform: scale(0.95); }
 
-/* MILESTONE BANNER */
 .milestone {
   position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 200;
   font-family: 'Baloo 2', cursive; font-size: 16px; font-weight: 800; padding: 12px 28px;
@@ -599,7 +590,7 @@ export default function Game2048() {
               <div className="g2-overlay lose">
                 <div className="overlay-emoji">🍃</div>
                 <div className="overlay-title">Oyun Bitti</div>
-                <div className="overlay-sub">Hamle kalmadı — {score.toLocaleString("tr-TR")} puan topladın!</div>
+                <div className="overlay-sub">Hamle kalmadı, {score.toLocaleString("tr-TR")} puan topladın!</div>
                 <div className="overlay-btns">
                   <button className="overlay-btn primary" onClick={restart}>Tekrar Oyna</button>
                   {history.length > 0 && (

@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Carousel, Button } from 'rsuite'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Play } from 'lucide-react'
+import { animate, stagger } from 'animejs'
 import { getImageUrl } from '../services/tmdb'
 import { useSwipe } from '../hooks/useSwipe'
 import type { Movie } from '../types/types'
@@ -15,6 +16,7 @@ const OVERVIEW_MAX = 180
 export default function HeroCarousel({ movies }: HeroCarouselProps) {
   const navigate = useNavigate()
   const [activeIndex, setActiveIndex] = useState(0)
+  const wrapperRef = useRef<HTMLDivElement>(null)
 
   const handlePrev = () => {
     setActiveIndex((prev) => (prev === 0 ? movies.length - 1 : prev - 1))
@@ -26,10 +28,19 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
 
   const swipe = useSwipe(handleNext, handlePrev)
 
+  useEffect(() => {
+    const slides = wrapperRef.current?.querySelectorAll('.hero-slide')
+    const active = slides?.[activeIndex]
+    const els = active?.querySelectorAll('.hero-info > *')
+    if (els && els.length) {
+      animate(els, { opacity: [0, 1], translateY: [24, 0], duration: 520, delay: stagger(70), ease: 'out(3)' })
+    }
+  }, [activeIndex])
+
   if (movies.length === 0) return null
 
   return (
-    <div className="hero-carousel-wrapper" {...swipe}>
+    <div className="hero-carousel-wrapper" ref={wrapperRef} {...swipe}>
       <Carousel
         placement="bottom"
         shape="dot"
@@ -40,6 +51,7 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
         {movies.map((movie, index) => (
           <div key={movie.id} className="hero-slide">
             <img
+              className="hero-slide__img"
               src={getImageUrl(movie.backdrop_path, 'original')}
               alt={movie.title}
               loading={index === 0 ? 'eager' : 'lazy'}
@@ -47,13 +59,13 @@ export default function HeroCarousel({ movies }: HeroCarouselProps) {
             />
             <div className="hero-overlay" />
             <div className="hero-info">
-              <h1>{movie.title}</h1>
+              <h1 className="hero-info__title">{movie.title}</h1>
               <p className="hero-meta">{movie.release_date?.slice(0, 4)}</p>
               <p className="hero-overview">
                 {movie.overview?.slice(0, OVERVIEW_MAX)}{(movie.overview?.length ?? 0) > OVERVIEW_MAX ? '…' : ''}
               </p>
-              <Button className="btn-play" size="lg" onClick={() => navigate('/work-in-progress')}>
-                <span className="play-icon">▶</span> Oynat
+              <Button className="btn-play" size="lg" onClick={() => navigate(`/movie/${movie.id}/player`, { state: { title: movie.title } })}>
+                <Play size={20} fill="currentColor" className="play-icon" /> Oynat
               </Button>
             </div>
           </div>

@@ -40,7 +40,7 @@ export default function GameCarousel() {
     <div className="game-carousel">
       <div className="gc-header">
         <div className="gc-header__left">
-          <h3>M-Smart Oyunlar</h3>
+          <h3>Lumii Oyunlar</h3>
         </div>
       </div>
 

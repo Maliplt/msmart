@@ -6,7 +6,6 @@ import { tmdbApi } from '../services/tmdb'
 import { useAsyncData } from '../hooks/useAsyncData'
 import type { Movie } from '../types/types'
 
-// tür bilgileri
 const GENRE = {
     kidsAndFamily: '16,10751',
     action: 28,

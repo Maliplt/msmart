@@ -686,7 +686,7 @@ export default function MinesweeperApp() {
                         <div className="ms-title">Mayın Tarlası</div>
                         <span className="bomb-icon" style={{ animationDelay: '1.5s' }}>💣</span>
                     </div>
-                    <div className="ms-subtitle">Dikkatli ol — patlayabilir!</div>
+                    <div className="ms-subtitle">Dikkatli ol, patlayabilir!</div>
 
                     <div className="diff-row">
                         {['kolay', 'orta', 'zor', 'uzman'].map(d => (

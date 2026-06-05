@@ -4,6 +4,7 @@ import { Search, Home, Film, Tv, Crown, X, Menu } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { animate } from 'animejs'
 import { useDebounce } from '../hooks/useDebounce'
+import Logo from './Logo'
 
 const NAV_LINKS = [
   { to: '/', label: 'Anasayfa', icon: Home },
@@ -28,7 +29,6 @@ export default function Header() {
 
   useEffect(() => { setMobileMenuOpen(false) }, [location.pathname])
 
-
   useEffect(() => {
     if (debouncedQuery) {
       navigate(`/search?q=${encodeURIComponent(debouncedQuery)}`, {
@@ -37,7 +37,6 @@ export default function Header() {
     } else if (location.pathname === '/search') {
       navigate('/search', { replace: true })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQuery])
 
   useEffect(() => {
@@ -91,7 +90,7 @@ export default function Header() {
       <Navbar className={`custom-header${scrolled ? ' scrolled' : ''}`}>
         <Navbar.Content className="header-left">
           <Navbar.Brand href="/" className="header-brand-link">
-            MSmart
+            <Logo />
           </Navbar.Brand>
           <Nav activeKey={location.pathname} className="header-main-nav">
             {NAV_LINKS.map(({ to, label, icon: Icon }) => (

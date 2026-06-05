@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Button } from 'rsuite'
+import { Play } from 'lucide-react'
 import PageLayout from '../components/PageLayout'
 import ContentCarousel from '../components/ContentCarousel'
 import Spinner from '../components/Spinner'
@@ -17,6 +18,7 @@ export default function OverviewPage() {
     const [selectedSeason, setSelectedSeason] = useState<number>(1)
     const [seasonData, setSeasonData] = useState<TVSeasonDetail | null>(null)
     const [episodesLoading, setEpisodesLoading] = useState(false)
+    const textClipRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         if (!type || !id) return
@@ -32,7 +34,6 @@ export default function OverviewPage() {
             setDetail(det as MovieDetail | TVShowDetail)
             setSimilar(sim.results.filter((item) => item.poster_path) as Movie[] | TVShow[])
         }).catch(() => {
-            // hata durumunda
         }).finally(() => {
             setLoading(false)
         })
@@ -48,6 +49,26 @@ export default function OverviewPage() {
             })
             .catch(() => setEpisodesLoading(false))
     }, [type, id, selectedSeason, loading, detail])
+
+    useEffect(() => {
+        const el = textClipRef.current
+        if (!el) return
+        const measure = () => {
+            el.classList.remove('is-overflowing')
+            const overflow = el.scrollHeight - el.clientHeight
+            if (overflow > 8) {
+                el.style.setProperty('--overview-scroll', `-${overflow}px`)
+                el.style.setProperty('--overview-scroll-dur', `${Math.max(10, Math.round(overflow / 18) + 8)}s`)
+                el.classList.add('is-overflowing')
+            }
+        }
+        const raf = requestAnimationFrame(measure)
+        window.addEventListener('resize', measure)
+        return () => {
+            cancelAnimationFrame(raf)
+            window.removeEventListener('resize', measure)
+        }
+    }, [detail])
 
     if (loading || !detail) return (
         <PageLayout className="overview-page" mainClassName="overview-main" loading />
@@ -78,19 +99,22 @@ export default function OverviewPage() {
         <PageLayout className="overview-page" mainClassName="overview-main">
                 <div className="overview-hero">
                     <img
+                        className="overview-hero__img"
                         src={getImageUrl(detail.backdrop_path, 'original')}
                         alt={title}
                         loading="lazy"
                     />
                     <div className="overview-hero__overlay" />
                     <div className="overview-hero__info">
-                        <h1>{title}</h1>
+                        <h1 className="overview-hero__title">{title}</h1>
                         <p className="overview-meta">{[genres, runtime, seasonsInfo, year].filter(Boolean).join(' · ')}</p>
-                        <p className="overview-text">{detail.overview}</p>
+                        <div className="overview-text-clip" ref={textClipRef}>
+                            <p className="overview-text">{detail.overview}</p>
+                        </div>
                         {director && <p className="overview-crew"><strong>Yönetmen:</strong> {director}</p>}
                         {cast && <p className="overview-cast"><strong>Oyuncular:</strong> {cast}</p>}
-                        <Button className="btn-play" size="lg" onClick={() => navigate('/work-in-progress')}>
-                            <span className="play-icon">▶</span> Oynat
+                        <Button className="btn-play" size="lg" onClick={() => navigate(`/${type}/${id}/player`, { state: { title } })}>
+                            <Play size={20} fill="currentColor" className="play-icon" /> Oynat
                         </Button>
                     </div>
                 </div>
@@ -116,7 +140,7 @@ export default function OverviewPage() {
 
                         {episodesLoading ? (
                             <div className="seasons-loading">
-                                <Spinner />
+                                <Spinner inline />
                             </div>
                         ) : seasonData?.episodes?.length ? (
                             <div className="episodes-list">
@@ -129,7 +153,9 @@ export default function OverviewPage() {
                                                 loading="lazy"
                                             />
                                             <div className="episode-card__media-overlay">
-                                                <span className="play-icon-mini" onClick={() => navigate('/work-in-progress')}>▶</span>
+                                                <span className="play-icon-mini" onClick={() => navigate(`/${type}/${id}/player`, { state: { title } })}>
+                                                    <Play size={16} fill="currentColor" />
+                                                </span>
                                             </div>
                                         </div>
                                         <div className="episode-card__info">

@@ -1,6 +1,4 @@
-// Türkçe kelime sözlüğü — kaynak: TDK imla kılavuzu (CanNuhlar/Turkce-Kelime-Listesi)
-// 45262 kelime · tek sözcük, 2-10 harf, yalın hâl filtresi uygulanmıştır.
-/* eslint-disable */
+
 const RAW = `AB
 ABA
 ABACI
