@@ -1,75 +1,73 @@
-# React + TypeScript + Vite
+# MSmart
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MSmart is a modern, responsive streaming and gaming platform dashboard built using React 19, TypeScript, and Vite. It integrates media playback, movie/show information from TMDB, tiered membership plans, and a collection of interactive games.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Content Discovery & Browsing
+- **Dynamic Dashboards**: Explore trending, popular, and top-rated movies and TV shows.
+- **Categorization & Filtering**: Browse by genres or media categories (Movies, TV Shows, Games).
+- **Search System**: Find media dynamically with debounced searches querying the TMDB API.
+- **Detailed Overview**: Detailed pages for individual movies and shows displaying ratings, genre tags, descriptions, director info, cast lists, and suggestions of similar items. For TV shows, it features an interactive season and episode selector.
 
-## React Compiler
+### Media Player
+- **HLS Integration**: A custom video player utilizing `hls.js` for adaptive bitrate streaming.
+- **Advanced Controls**: Full-screen toggle, volume slider, interactive seeker, play/pause controls, quality level configuration (ABR/manual), and keyboard shortcuts.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Subscription Packages
+- **Membership Plans**: Tiered subscription page highlighting features, prices, and billing periods with a clean call-to-action layout.
 
-Note: This will impact Vite dev & build performances.
+### Mini-Games Hub
+- **2048**: A grid-based puzzle game with animations.
+- **Minesweeper**: A modern version of the classic puzzle with custom grids, bomb flags, and state management.
+- **Sudoku**: Fully interactive board with number pad, input history, conflict highlighting, and sound effects.
+- **Kelime Zinciri (Word Chain)**: A word connection game in Turkish featuring dictionary lookups, score tracking, and time limits.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Core**: React 19, TypeScript, Vite
+- **Styling**: Tailwind CSS v4, Sass / SCSS
+- **Routing**: React Router DOM v7
+- **APIs & Data**: Axios, TMDB (The Movie Database) API
+- **Utilities & Icons**: Lucide React, RSuite, HLS.js, Anime.js
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Prerequisites
+Make sure you have Node.js installed on your machine.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
+1. Clone the repository.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Configuration
+Create a `.env` file in the root directory and add your TMDB API key:
+```env
+VITE_TMDB_API_KEY=your_api_key_here
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
+To start the Vite development server:
+```bash
+npm run dev
+```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Production Build
+To build the application for production:
+```bash
+npm run build
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+To preview the built production site:
+```bash
+npm run preview
+```
+
+### Code Quality
+To check for code linting errors:
+```bash
+npm run lint
 ```
